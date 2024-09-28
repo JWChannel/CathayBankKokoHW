@@ -90,7 +90,7 @@ struct UserResponse: Codable {
 
 struct User: Codable {
     var name: String
-    var kokoid: String?
+    var kokoID: String?
 }
 
 struct FriendsResponse: Codable {
@@ -141,11 +141,21 @@ class FriendsVC: UIViewController {
     
     private let userView = UserView()
     private let userViewModel = UserViewModel()
+    let friendsEmptyView = FriendsEmptyView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserView()
         fetchUserInfo()
+        
+        view.addSubview(friendsEmptyView)
+        friendsEmptyView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            friendsEmptyView.topAnchor.constraint(equalTo: userView.separatorLineView.bottomAnchor),
+            friendsEmptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            friendsEmptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            friendsEmptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 }
 
@@ -181,16 +191,16 @@ fileprivate extension FriendsVC {
 
 class UserView: UIView {
     
-    let userNameLabel = UILabel()
-    let userIDLabel = UILabel()
-    let userImageView = UIImageView()
-    let buttonStackView = UIStackView()
+    private let userNameLabel = UILabel()
+    private let userIDLabel = UILabel()
+    private let userImageView = UIImageView()
+    private let buttonStackView = UIStackView()
     
-    let friendsButton = UIButton()
-    let chatButton = UIButton()
-    let underlineView = UIView()
+    private let friendsButton = UIButton()
+    private let chatButton = UIButton()
+    private let underlineView = UIView()
     let separatorLineView = UIView()
-    var underlineonstraint: NSLayoutConstraint?
+    private var underlineonstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -209,14 +219,14 @@ fileprivate extension UserView {
     @objc func friendsButtonTapped() {
         moveUnderline(to: friendsButton)
     }
-
+    
     @objc func chatButtonTapped() {
         moveUnderline(to: chatButton)
     }
     
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
-        userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") ❯"
+        userIDLabel.text = "KOKO ID: \(user.kokoID ?? "......") ❯"
     }
     
     func moveUnderline(to button: UIButton) {
@@ -229,7 +239,7 @@ fileprivate extension UserView {
         }
     }
 }
-	
+
 fileprivate extension UserView {
     
     func setupUI() {
@@ -300,12 +310,12 @@ fileprivate extension UserView {
         buttonStackView.addArrangedSubview(friendsButton)
         buttonStackView.addArrangedSubview(chatButton)
         addSubview(buttonStackView)
-
+        
         underlineView.backgroundColor = .systemPink
         underlineView.layer.cornerRadius = 3
         underlineView.clipsToBounds = true
         addSubview(underlineView)
-
+        
         separatorLineView.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         addSubview(separatorLineView)
     }
@@ -317,8 +327,8 @@ fileprivate extension UserView {
         
         NSLayoutConstraint.activate([
             separatorLineView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
-            separatorLineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-            separatorLineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+            separatorLineView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            separatorLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
             separatorLineView.heightAnchor.constraint(equalToConstant: 1)
         ])
         
@@ -330,10 +340,147 @@ fileprivate extension UserView {
         
         underlineonstraint = underlineView.centerXAnchor.constraint(equalTo: friendsButton.centerXAnchor)
         underlineonstraint?.isActive = true
+        
         NSLayoutConstraint.activate([
             underlineView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 5),
             underlineView.widthAnchor.constraint(equalToConstant: 20),
             underlineView.heightAnchor.constraint(equalToConstant: 4)
         ])
     }
+}
+
+class FriendsEmptyView: UIView {
+    
+    private let imageView = UIImageView()
+    private let textLabelBold = UILabel()
+    private let textLabelRegular = UILabel()
+    private let textCaptions = UILabel()
+    private let addFriendButton = UIButton()
+    private let gradientLayer = CAGradientLayer()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        gradientLayer.frame = addFriendButton.bounds
+    }
+}
+
+fileprivate extension FriendsEmptyView {
+    
+    func setupUI() {
+        setupImageView()
+        setupAddFriendText()
+        setupAddFriendButton()
+        setCaptions()
+    }
+    
+    func setupImageView() {
+        
+        imageView.image = UIImage(named: "imgFriendsEmpty")
+        imageView.contentMode = .scaleAspectFit
+        addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
+            imageView.widthAnchor.constraint(equalToConstant: 245),
+            imageView.heightAnchor.constraint(equalToConstant: 172)
+        ])
+    }
+    
+    func setupAddFriendText() {
+        
+        // 就從加好友開始吧：）
+        textLabelBold.text = "就從加好友開始吧 : )"
+        textLabelBold.textColor = .darkGray
+        textLabelBold.font = UIFont.systemFont(ofSize: 21, weight: .semibold)
+        textLabelBold.textAlignment = .center
+        addSubview(textLabelBold)
+        textLabelBold.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textLabelBold.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 41),
+            textLabelBold.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        ])
+        
+        // 與好友們一起用 KOKO 聊起來！
+        // 還能互相收付款、發紅包喔：）
+        textLabelRegular.text = "與好友們一起用 KOKO 聊起來！\n還能互相收付款、發紅包喔 : )"
+        textLabelRegular.textColor = .lightGray
+        textLabelRegular.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        textLabelRegular.numberOfLines = 0
+        textLabelRegular.textAlignment = .center
+        addSubview(textLabelRegular)
+        textLabelRegular.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textLabelRegular.topAnchor.constraint(equalTo: textLabelBold.bottomAnchor, constant: 10),
+            textLabelRegular.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        ])
+    }
+    
+    func setupAddFriendButton() {
+        
+        addFriendButton.setTitle("加好友", for: .normal)
+        addFriendButton.setTitleColor(.white, for: .normal)
+        addFriendButton.layer.cornerRadius = 20
+        addSubview(addFriendButton)
+        addFriendButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            addFriendButton.topAnchor.constraint(equalTo: textLabelRegular.bottomAnchor, constant: 30),
+            addFriendButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            addFriendButton.widthAnchor.constraint(equalToConstant: 192),
+            addFriendButton.heightAnchor.constraint(equalToConstant: 40)
+        ])
+        // Gradient
+        gradientLayer.cornerRadius = 20
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        gradientLayer.colors = [UIColor.G1.cgColor, UIColor.G2.cgColor]
+        // inset CALayer
+        addFriendButton.layer.insertSublayer(gradientLayer, at: 0)
+        // shadow
+        addFriendButton.layer.shadowColor = UIColor.G2.cgColor
+        addFriendButton.layer.shadowOffset = CGSize(width: 0, height: 4)
+        addFriendButton.layer.shadowRadius = 8
+        addFriendButton.layer.shadowOpacity = 0.4
+        
+        // button icon
+        let plusIcon = UIImageView(image: UIImage(named: "icAddFriendWhite"))
+        addFriendButton.addSubview(plusIcon)
+        plusIcon.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            plusIcon.trailingAnchor.constraint(equalTo: addFriendButton.trailingAnchor, constant: -10),
+            plusIcon.centerYAnchor.constraint(equalTo: addFriendButton.centerYAnchor),
+            plusIcon.widthAnchor.constraint(equalToConstant: 24),
+            plusIcon.heightAnchor.constraint(equalToConstant: 24)
+        ])
+    }
+    
+    func setCaptions() {
+        // 幫助好友更快找到你？設定 KOKO ID
+        textCaptions.text = "幫助好友更快找到你？"
+        textCaptions.textColor = .lightGray
+        textCaptions.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        textCaptions.textAlignment = .center
+        addSubview(textCaptions)
+        textCaptions.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textCaptions.topAnchor.constraint(equalTo: addFriendButton.bottomAnchor, constant: 37),
+            textCaptions.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+        ])
+    }
+}
+
+extension UIColor {
+    static let G1 = UIColor.froggreen
+    static let G2 = UIColor.booger
+    static let G3 = UIColor(red: 121/255, green: 196/255, blue: 27/255, alpha: 0.4)
 }
