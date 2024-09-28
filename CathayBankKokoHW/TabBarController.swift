@@ -93,6 +93,18 @@ struct User: Codable {
     var kokoid: String?
 }
 
+struct FriendsResponse: Codable {
+    let response: [Friend]
+}
+
+struct Friend: Codable {
+    let name: String
+    let status: Int // 0: send invitation, 1: accepted, 2: pending
+    let isTop: String // 0: no, 1: yes
+    let fid: String // friend id
+    let updateDate: String // update date
+}
+
 enum Scenario: CaseIterable {
     case noFriends
     case friendsOnly
