@@ -90,7 +90,7 @@ struct UserResponse: Codable {
 
 struct User: Codable {
     var name: String
-    var kokoID: String?
+    var kokoid: String?
 }
 
 struct FriendsResponse: Codable {
@@ -194,7 +194,6 @@ class UserView: UIView {
     private let userNameLabel = UILabel()
     private let userIDLabel = UILabel()
     private let userImageView = UIImageView()
-    private let buttonStackView = UIStackView()
     
     private let friendsButton = UIButton()
     private let chatButton = UIButton()
@@ -226,7 +225,7 @@ fileprivate extension UserView {
     
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
-        userIDLabel.text = "KOKO ID: \(user.kokoID ?? "......") ❯"
+        userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") "
     }
     
     func moveUnderline(to button: UIButton) {
@@ -247,7 +246,6 @@ fileprivate extension UserView {
         setupUserName()
         setupUserID()
         setupButtonUI()
-        setupButtonConstraints()
     }
     
     func setupUserImageView() {
@@ -280,7 +278,7 @@ fileprivate extension UserView {
     }
     
     func setupUserID() {
-        userIDLabel.text = "KOKO ID: ...... ❯"
+        userIDLabel.text = "KOKO ID: ......"
         userIDLabel.textColor = .darkGray
         userIDLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         
@@ -304,6 +302,7 @@ fileprivate extension UserView {
         chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         chatButton.addTarget(self, action: #selector(chatButtonTapped), for: .touchUpInside)
         
+        let buttonStackView = UIStackView()
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 36
         buttonStackView.alignment = .leading
@@ -318,9 +317,7 @@ fileprivate extension UserView {
         
         separatorLineView.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         addSubview(separatorLineView)
-    }
-    
-    func setupButtonConstraints() {
+
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         underlineView.translatesAutoresizingMaskIntoConstraints = false
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
@@ -354,9 +351,13 @@ class FriendsEmptyView: UIView {
     private let imageView = UIImageView()
     private let textLabelBold = UILabel()
     private let textLabelRegular = UILabel()
-    private let textCaptions = UILabel()
-    private let addFriendButton = UIButton()
+ 
     private let gradientLayer = CAGradientLayer()
+    private let addFriendButton = UIButton()
+    
+    private let textLabelSmall = UILabel()
+    private let buttonArrow = UIButton()
+    private let kokoSettingButton = UIButton()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -439,7 +440,7 @@ fileprivate extension FriendsEmptyView {
             addFriendButton.widthAnchor.constraint(equalToConstant: 192),
             addFriendButton.heightAnchor.constraint(equalToConstant: 40)
         ])
-        // Gradient
+        // gradient
         gradientLayer.cornerRadius = 20
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
@@ -466,15 +467,32 @@ fileprivate extension FriendsEmptyView {
     
     func setCaptions() {
         // 幫助好友更快找到你？設定 KOKO ID
-        textCaptions.text = "幫助好友更快找到你？"
-        textCaptions.textColor = .lightGray
-        textCaptions.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        textCaptions.textAlignment = .center
-        addSubview(textCaptions)
-        textCaptions.translatesAutoresizingMaskIntoConstraints = false
+        textLabelSmall.text = "幫助好友更快找到你 ？"
+        textLabelSmall.textColor = .lightGray
+        textLabelSmall.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        textLabelSmall.textAlignment = .center
+        addSubview(textLabelSmall)
+
+        let title = "設定 KOKO ID"
+        buttonArrow.setTitle(title, for: .normal)
+        buttonArrow.setTitleColor(.systemPink, for: .normal)
+        buttonArrow.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        // button title underline style
+        buttonArrow.underlineText()
+        addSubview(buttonArrow)
+        
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 0
+        stackView.alignment = .center
+        stackView.addArrangedSubview(textLabelSmall)
+        stackView.addArrangedSubview(buttonArrow)
+        addSubview(stackView)
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textCaptions.topAnchor.constraint(equalTo: addFriendButton.bottomAnchor, constant: 37),
-            textCaptions.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+            stackView.topAnchor.constraint(equalTo: addFriendButton.bottomAnchor, constant: 37),
+            stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
     }
 }
@@ -482,5 +500,19 @@ fileprivate extension FriendsEmptyView {
 extension UIColor {
     static let G1 = UIColor.froggreen
     static let G2 = UIColor.booger
-    static let G3 = UIColor(red: 121/255, green: 196/255, blue: 27/255, alpha: 0.4)
+    static let G3 = UIColor.applegreen
+}
+
+extension UIButton {
+  func underlineText() {
+    guard let title = title(for: .normal) else { return }
+
+    let titleString = NSMutableAttributedString(string: title)
+    titleString.addAttribute(
+      .underlineStyle,
+      value: NSUnderlineStyle.single.rawValue,
+      range: NSRange(location: 0, length: title.count)
+    )
+    setAttributedTitle(titleString, for: .normal)
+  }
 }
