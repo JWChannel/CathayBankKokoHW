@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CB69F5D32CA810C900F95219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB69F5D22CA810C900F95219 /* AppDelegate.swift */; };
 		CB69F5D52CA810C900F95219 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB69F5D42CA810C900F95219 /* SceneDelegate.swift */; };
-		CB69F5D72CA810C900F95219 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB69F5D62CA810C900F95219 /* ViewController.swift */; };
+		CB69F5D72CA810C900F95219 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB69F5D62CA810C900F95219 /* TabBarController.swift */; };
 		CB69F5DA2CA810C900F95219 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB69F5D82CA810C900F95219 /* Main.storyboard */; };
 		CB69F5DC2CA810CA00F95219 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB69F5DB2CA810CA00F95219 /* Assets.xcassets */; };
 		CB69F5DF2CA810CA00F95219 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB69F5DD2CA810CA00F95219 /* LaunchScreen.storyboard */; };
@@ -19,7 +19,7 @@
 		CB69F5CF2CA810C900F95219 /* CathayBankKokoHW.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CathayBankKokoHW.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB69F5D22CA810C900F95219 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CB69F5D42CA810C900F95219 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CB69F5D62CA810C900F95219 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CB69F5D62CA810C900F95219 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		CB69F5D92CA810C900F95219 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CB69F5DB2CA810CA00F95219 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CB69F5DE2CA810CA00F95219 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -58,7 +58,7 @@
 			children = (
 				CB69F5D22CA810C900F95219 /* AppDelegate.swift */,
 				CB69F5D42CA810C900F95219 /* SceneDelegate.swift */,
-				CB69F5D62CA810C900F95219 /* ViewController.swift */,
+				CB69F5D62CA810C900F95219 /* TabBarController.swift */,
 				CB69F5D82CA810C900F95219 /* Main.storyboard */,
 				CB69F5DB2CA810CA00F95219 /* Assets.xcassets */,
 				CB69F5DD2CA810CA00F95219 /* LaunchScreen.storyboard */,
@@ -138,7 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB69F5D72CA810C900F95219 /* ViewController.swift in Sources */,
+				CB69F5D72CA810C900F95219 /* TabBarController.swift in Sources */,
 				CB69F5D32CA810C900F95219 /* AppDelegate.swift in Sources */,
 				CB69F5D52CA810C900F95219 /* SceneDelegate.swift in Sources */,
 			);
