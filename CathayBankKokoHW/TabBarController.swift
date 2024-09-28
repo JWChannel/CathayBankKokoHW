@@ -84,9 +84,33 @@ fileprivate extension FriendsNavController {
     }
 }
 
+struct UserResponse: Codable {
+    var response: [User]
+}
+
+struct User: Codable {
+    var name: String
+    var kokoid: String?
+}
+
+class UserViewModel {
+    
+    func fetchUsers() async throws -> [User] {
+        let url = URL(string: "https://dimanyen.github.io/man.json")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let userResponse = try JSONDecoder().decode(UserResponse.self, from: data)
+        return userResponse.response
+    }
+}
+
+
 class FriendsVC: UIViewController {
     
     let userView = UIView()
+    var user: [User] = []
+    let userViewModel = UserViewModel()
+    let userNameLabel = UILabel()
+    let userIDLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,10 +118,29 @@ class FriendsVC: UIViewController {
         setupUserImageView()
         setupUserName()
         setupUserID()
+        fetchUserInfo()
     }
 }
 
 fileprivate extension FriendsVC {
+    
+    func fetchUserInfo() {
+        Task {
+            do {
+                user = try await userViewModel.fetchUsers()
+                if let firstUser = user.first { updateUserInfo(with: firstUser) }
+                print(user)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func updateUserInfo(with user: User) {
+          userNameLabel.text = user.name
+          userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") ❯"
+      }
+    
     func setupUserView() {
         view.addSubview(userView)
         userView.backgroundColor = .lightGray
@@ -128,7 +171,6 @@ fileprivate extension FriendsVC {
     }
     
     func setupUserName() {
-        let userNameLabel = UILabel()
         userNameLabel.text = "......"
         userNameLabel.textColor = .black
         userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
@@ -136,13 +178,12 @@ fileprivate extension FriendsVC {
         view.addSubview(userNameLabel)
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 25),
+            userNameLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 30),
             userNameLabel.leadingAnchor.constraint(equalTo: userView.leadingAnchor, constant: 30)
         ])
     }
     
     func setupUserID() {
-        let userIDLabel = UILabel()
         userIDLabel.text = "KOKO ID: ...... ❯"
         userIDLabel.textColor = .black
         userIDLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
@@ -150,7 +191,7 @@ fileprivate extension FriendsVC {
         view.addSubview(userIDLabel)
         userIDLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userIDLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 50),
+            userIDLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 55),
             userIDLabel.leadingAnchor.constraint(equalTo: userView.leadingAnchor, constant: 30)
         ])
     }
