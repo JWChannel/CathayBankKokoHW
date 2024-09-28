@@ -60,18 +60,11 @@ import SwiftUI
     TabBarController()
 }
 
-class FriendsVC: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-    }
-}
-
 class FriendsNavController: UINavigationController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupFriendsVC()
-        setupNavButtons()
     }
 }
 
@@ -80,19 +73,85 @@ fileprivate extension FriendsNavController {
         let FriendVC = FriendsVC()
         
         let rightBarButton = UIBarButtonItem(image: UIImage(named: "icNavPinkScan"), style: .plain, target: nil, action: nil)
-        FriendVC.navigationItem.rightBarButtonItem = rightBarButton
-        
         let leftBarButton1 = UIBarButtonItem(image: UIImage(named: "icNavPinkWithdraw"), style: .plain, target: nil, action: nil)
         let leftBarButton2 = UIBarButtonItem(image: UIImage(named: "icNavPinkTransfer"), style: .plain, target: nil, action: nil)
-        FriendVC.navigationItem.leftBarButtonItems = [leftBarButton1, leftBarButton2]
         
+        FriendVC.navigationItem.rightBarButtonItem = rightBarButton
+        FriendVC.navigationItem.leftBarButtonItems = [leftBarButton1, leftBarButton2]
         UIBarButtonItem.appearance().tintColor = .systemPink
         
         setViewControllers([FriendVC], animated: false)
     }
+}
+
+class FriendsVC: UIViewController {
     
-    func setupNavButtons() {
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.backgroundColor = .white
+    let userView = UIView()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUserView()
+        setupUserImageView()
+        setupUserName()
+        setupUserID()
+    }
+}
+
+fileprivate extension FriendsVC {
+    func setupUserView() {
+        view.addSubview(userView)
+        userView.backgroundColor = .lightGray
+        userView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            userView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            userView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            userView.heightAnchor.constraint(equalToConstant: 130)
+        ])
+    }
+    
+    func setupUserImageView() {
+        let userImageView = UIImageView()
+        userImageView.image = UIImage(named: "imgFriendsFemaleDefault")
+        view.addSubview(userImageView)
+        userImageView.layer.cornerRadius = 25
+        userImageView.backgroundColor = .clear
+        userImageView.clipsToBounds = true
+        userImageView.contentMode = .scaleAspectFill
+        userImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userImageView.topAnchor.constraint(equalTo: userView.topAnchor, constant: 20),
+            userImageView.trailingAnchor.constraint(equalTo: userView.trailingAnchor, constant: -30),
+            userImageView.widthAnchor.constraint(equalToConstant: 52),
+            userImageView.heightAnchor.constraint(equalToConstant: 52)
+        ])
+    }
+    
+    func setupUserName() {
+        let userNameLabel = UILabel()
+        userNameLabel.text = "......"
+        userNameLabel.textColor = .black
+        userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        
+        view.addSubview(userNameLabel)
+        userNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userNameLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 25),
+            userNameLabel.leadingAnchor.constraint(equalTo: userView.leadingAnchor, constant: 30)
+        ])
+    }
+    
+    func setupUserID() {
+        let userIDLabel = UILabel()
+        userIDLabel.text = "KOKO ID: ...... ❯"
+        userIDLabel.textColor = .black
+        userIDLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        
+        view.addSubview(userIDLabel)
+        userIDLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userIDLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 50),
+            userIDLabel.leadingAnchor.constraint(equalTo: userView.leadingAnchor, constant: 30)
+        ])
     }
 }
