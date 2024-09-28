@@ -192,8 +192,9 @@ fileprivate extension FriendsVC {
 class UserView: UIView {
     
     private let userNameLabel = UILabel()
-    private let userIDLabel = UILabel()
+    private let userIdLabel = UILabel()
     private let userImageView = UIImageView()
+    private let buttonArrow = UIButton()
     
     private let friendsButton = UIButton()
     private let chatButton = UIButton()
@@ -225,7 +226,7 @@ fileprivate extension UserView {
     
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
-        userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") "
+        userIdLabel.text = "KOKO ID: \(user.kokoid ?? "......") "
     }
     
     func moveUnderline(to button: UIButton) {
@@ -244,7 +245,7 @@ fileprivate extension UserView {
     func setupUI() {
         setupUserImageView()
         setupUserName()
-        setupUserID()
+        setupUserIdWithArrow()
         setupButtonUI()
     }
     
@@ -277,17 +278,28 @@ fileprivate extension UserView {
         ])
     }
     
-    func setupUserID() {
-        userIDLabel.text = "KOKO ID: ......"
-        userIDLabel.textColor = .darkGray
-        userIDLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+    func setupUserIdWithArrow() {
+        userIdLabel.text = "KOKO ID: ......"
+        userIdLabel.textColor = .darkGray
+        userIdLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         
-        addSubview(userIDLabel)
-        userIDLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(userIdLabel)
+        userIdLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userIDLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 55),
-            userIDLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
+            userIdLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 55),
+            userIdLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
         ])
+        
+        buttonArrow.setImage(UIImage(named: "icInfoBackDeepGray"), for: .normal)
+        addSubview(buttonArrow)
+        buttonArrow.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            buttonArrow.centerYAnchor.constraint(equalTo: userIdLabel.centerYAnchor),
+            buttonArrow.leadingAnchor.constraint(equalTo: userIdLabel.trailingAnchor, constant: 0),
+            buttonArrow.widthAnchor.constraint(equalToConstant: 16),
+            buttonArrow.heightAnchor.constraint(equalToConstant: 16)
+        ])
+        
     }
     
     func setupButtonUI() {
@@ -356,7 +368,6 @@ class FriendsEmptyView: UIView {
     private let addFriendButton = UIButton()
     
     private let textLabelSmall = UILabel()
-    private let buttonArrow = UIButton()
     private let kokoSettingButton = UIButton()
     
     override init(frame: CGRect) {
@@ -474,19 +485,19 @@ fileprivate extension FriendsEmptyView {
         addSubview(textLabelSmall)
 
         let title = "設定 KOKO ID"
-        buttonArrow.setTitle(title, for: .normal)
-        buttonArrow.setTitleColor(.systemPink, for: .normal)
-        buttonArrow.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        kokoSettingButton.setTitle(title, for: .normal)
+        kokoSettingButton.setTitleColor(.systemPink, for: .normal)
+        kokoSettingButton.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         // button title underline style
-        buttonArrow.underlineText()
-        addSubview(buttonArrow)
+        kokoSettingButton.underlineText()
+        addSubview(kokoSettingButton)
         
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = 0
         stackView.alignment = .center
         stackView.addArrangedSubview(textLabelSmall)
-        stackView.addArrangedSubview(buttonArrow)
+        stackView.addArrangedSubview(kokoSettingButton)
         addSubview(stackView)
 
         stackView.translatesAutoresizingMaskIntoConstraints = false
