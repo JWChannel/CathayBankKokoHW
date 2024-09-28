@@ -93,6 +93,28 @@ struct User: Codable {
     var kokoid: String?
 }
 
+enum Scenario: CaseIterable {
+    case noFriends
+    case friendsOnly
+    case friendsWithInvitations
+    
+    var title: String {
+        switch self {
+        case .noFriends: return "無好友畫⾯"
+        case .friendsOnly: return "只有好友列表"
+        case .friendsWithInvitations: return "好友列表含邀請"
+        }
+    }
+    
+    var scenarioURL: [String] {
+        switch self {
+        case .noFriends: return ["https://dimanyen.github.io/friend4.json"]
+        case .friendsOnly: return ["https://dimanyen.github.io/friend1.json", "https://dimanyen.github.io/friend2.json"]
+        case .friendsWithInvitations: return ["https://dimanyen.github.io/friend3.json"]
+        }
+    }
+}
+
 class UserViewModel {
     
     func fetchUsers() async throws -> [User] {
@@ -159,7 +181,11 @@ class UserView: UIView {
         super.init(coder: coder)
         setupUI()
     }
+}
 
+fileprivate extension UserView {
+    
+    @MainActor
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
         userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") ❯"
@@ -199,7 +225,7 @@ fileprivate extension UserView {
     
     func setupUserName() {
         userNameLabel.text = "......"
-        userNameLabel.textColor = .black
+        userNameLabel.textColor = .darkGray
         userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         
         addSubview(userNameLabel)
@@ -212,7 +238,7 @@ fileprivate extension UserView {
     
     func setupUserID() {
         userIDLabel.text = "KOKO ID: ...... ❯"
-        userIDLabel.textColor = .black
+        userIDLabel.textColor = .darkGray
         userIDLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         
         addSubview(userIDLabel)
