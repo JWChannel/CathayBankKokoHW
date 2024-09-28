@@ -103,21 +103,14 @@ class UserViewModel {
     }
 }
 
-
 class FriendsVC: UIViewController {
     
-    let userView = UIView()
-    var user: [User] = []
-    let userViewModel = UserViewModel()
-    let userNameLabel = UILabel()
-    let userIDLabel = UILabel()
+    private let userView = UserView()
+    private let userViewModel = UserViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUserView()
-        setupUserImageView()
-        setupUserName()
-        setupUserID()
         fetchUserInfo()
     }
 }
@@ -127,8 +120,10 @@ fileprivate extension FriendsVC {
     func fetchUserInfo() {
         Task {
             do {
-                user = try await userViewModel.fetchUsers()
-                if let firstUser = user.first { updateUserInfo(with: firstUser) }
+                let user = try await userViewModel.fetchUsers()
+                if let firstUser = user.first {
+                    userView.updateUserInfo(with: firstUser)
+                }
                 print(user)
             } catch {
                 print(error)
@@ -136,14 +131,8 @@ fileprivate extension FriendsVC {
         }
     }
     
-    func updateUserInfo(with user: User) {
-          userNameLabel.text = user.name
-          userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") ❯"
-      }
-    
     func setupUserView() {
         view.addSubview(userView)
-        userView.backgroundColor = .lightGray
         userView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             userView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -152,19 +141,57 @@ fileprivate extension FriendsVC {
             userView.heightAnchor.constraint(equalToConstant: 130)
         ])
     }
+}
+
+
+class UserView: UIView {
+    
+    let userNameLabel = UILabel()
+    let userIDLabel = UILabel()
+    let userImageView = UIImageView()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    func updateUserInfo(with user: User) {
+        userNameLabel.text = user.name
+        userIDLabel.text = "KOKO ID: \(user.kokoid ?? "......") ❯"
+    }
+}
+	
+fileprivate extension UserView {
+    
+    func setupUI() {
+        setupUserView()
+        setupUserImageView()
+        setupUserName()
+        setupUserID()
+    }
+    
+    func setupUserView() {
+        self.backgroundColor = .lightGray
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.heightAnchor.constraint(equalToConstant: 130).isActive = true
+    }
     
     func setupUserImageView() {
-        let userImageView = UIImageView()
         userImageView.image = UIImage(named: "imgFriendsFemaleDefault")
-        view.addSubview(userImageView)
+        addSubview(userImageView)
         userImageView.layer.cornerRadius = 25
         userImageView.backgroundColor = .clear
         userImageView.clipsToBounds = true
         userImageView.contentMode = .scaleAspectFill
         userImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userImageView.topAnchor.constraint(equalTo: userView.topAnchor, constant: 20),
-            userImageView.trailingAnchor.constraint(equalTo: userView.trailingAnchor, constant: -30),
+            userImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            userImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
             userImageView.widthAnchor.constraint(equalToConstant: 52),
             userImageView.heightAnchor.constraint(equalToConstant: 52)
         ])
@@ -175,11 +202,11 @@ fileprivate extension FriendsVC {
         userNameLabel.textColor = .black
         userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         
-        view.addSubview(userNameLabel)
+        addSubview(userNameLabel)
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 30),
-            userNameLabel.leadingAnchor.constraint(equalTo: userView.leadingAnchor, constant: 30)
+            userNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
+            userNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
         ])
     }
     
@@ -188,11 +215,11 @@ fileprivate extension FriendsVC {
         userIDLabel.textColor = .black
         userIDLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         
-        view.addSubview(userIDLabel)
+        addSubview(userIDLabel)
         userIDLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userIDLabel.topAnchor.constraint(equalTo: userView.topAnchor, constant: 55),
-            userIDLabel.leadingAnchor.constraint(equalTo: userView.leadingAnchor, constant: 30)
+            userIDLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 55),
+            userIDLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
         ])
     }
 }
