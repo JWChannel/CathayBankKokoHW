@@ -84,27 +84,6 @@ fileprivate extension FriendsNavController {
     }
 }
 
-struct UserResponse: Codable {
-    var response: [User]
-}
-
-struct User: Codable {
-    var name: String
-    var kokoid: String?
-}
-
-struct FriendsResponse: Codable {
-    let response: [Friend]
-}
-
-struct Friend: Codable {
-    let name: String
-    let status: Int // 0: send invitation, 1: accepted, 2: pending
-    let isTop: String // 0: no, 1: yes
-    let fid: String // friend id
-    let updateDate: String // update date
-}
-
 enum Scenario: CaseIterable {
     case noFriends
     case friendsOnly
@@ -127,21 +106,12 @@ enum Scenario: CaseIterable {
     }
 }
 
-class UserViewModel {
-    
-    func fetchUsers() async throws -> [User] {
-        let url = URL(string: "https://dimanyen.github.io/man.json")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let userResponse = try JSONDecoder().decode(UserResponse.self, from: data)
-        return userResponse.response
-    }
-}
-
 class FriendsVC: UIViewController {
     
     private let userView = UserView()
-    private let userViewModel = UserViewModel()
+    private let userViewModel = UserVM()
     let friendsEmptyView = FriendsEmptyView()
+    private let friendsViewModel = FriendsVM()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,7 +121,7 @@ class FriendsVC: UIViewController {
         view.addSubview(friendsEmptyView)
         friendsEmptyView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            friendsEmptyView.topAnchor.constraint(equalTo: userView.separatorLineView.bottomAnchor),
+            friendsEmptyView.topAnchor.constraint(equalTo: userView.bottomAnchor),
             friendsEmptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             friendsEmptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             friendsEmptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -173,6 +143,14 @@ fileprivate extension FriendsVC {
                 print(error)
             }
         }
+        
+        Task {
+            do {
+                try await friendsViewModel.fetchFriendsXTimes()
+            } catch {
+                print(error)
+            }
+        }
     }
     
     func setupUserView() {
@@ -187,7 +165,6 @@ fileprivate extension FriendsVC {
         ])
     }
 }
-
 
 class UserView: UIView {
     
@@ -299,7 +276,6 @@ fileprivate extension UserView {
             buttonArrow.widthAnchor.constraint(equalToConstant: 16),
             buttonArrow.heightAnchor.constraint(equalToConstant: 16)
         ])
-        
     }
     
     func setupButtonUI() {
@@ -451,6 +427,7 @@ fileprivate extension FriendsEmptyView {
             addFriendButton.widthAnchor.constraint(equalToConstant: 192),
             addFriendButton.heightAnchor.constraint(equalToConstant: 40)
         ])
+        
         // gradient
         gradientLayer.cornerRadius = 20
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)

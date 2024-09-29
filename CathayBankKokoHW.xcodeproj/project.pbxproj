@@ -13,6 +13,10 @@
 		CB69F5DA2CA810C900F95219 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB69F5D82CA810C900F95219 /* Main.storyboard */; };
 		CB69F5DC2CA810CA00F95219 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB69F5DB2CA810CA00F95219 /* Assets.xcassets */; };
 		CB69F5DF2CA810CA00F95219 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB69F5DD2CA810CA00F95219 /* LaunchScreen.storyboard */; };
+		CB9AD8972CA8B8FF00582634 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD8962CA8B8FF00582634 /* FriendsVM.swift */; };
+		CB9AD8992CA8B91200582634 /* UserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD8982CA8B91200582634 /* UserVM.swift */; };
+		CB9AD89B2CA8B92800582634 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD89A2CA8B92800582634 /* UserModel.swift */; };
+		CB9AD89D2CA8B93500582634 /* FriendsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD89C2CA8B93500582634 /* FriendsModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		CB69F5DB2CA810CA00F95219 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CB69F5DE2CA810CA00F95219 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CB69F5E02CA810CA00F95219 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CB9AD8962CA8B8FF00582634 /* FriendsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsVM.swift; sourceTree = "<group>"; };
+		CB9AD8982CA8B91200582634 /* UserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVM.swift; sourceTree = "<group>"; };
+		CB9AD89A2CA8B92800582634 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		CB9AD89C2CA8B93500582634 /* FriendsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,12 +67,32 @@
 				CB69F5D22CA810C900F95219 /* AppDelegate.swift */,
 				CB69F5D42CA810C900F95219 /* SceneDelegate.swift */,
 				CB69F5D62CA810C900F95219 /* TabBarController.swift */,
+				CB9AD89F2CA8B94B00582634 /* Model */,
+				CB9AD89E2CA8B93F00582634 /* ViewModel */,
 				CB69F5D82CA810C900F95219 /* Main.storyboard */,
 				CB69F5DB2CA810CA00F95219 /* Assets.xcassets */,
 				CB69F5DD2CA810CA00F95219 /* LaunchScreen.storyboard */,
 				CB69F5E02CA810CA00F95219 /* Info.plist */,
 			);
 			path = CathayBankKokoHW;
+			sourceTree = "<group>";
+		};
+		CB9AD89E2CA8B93F00582634 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				CB9AD8982CA8B91200582634 /* UserVM.swift */,
+				CB9AD8962CA8B8FF00582634 /* FriendsVM.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		CB9AD89F2CA8B94B00582634 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CB9AD89A2CA8B92800582634 /* UserModel.swift */,
+				CB9AD89C2CA8B93500582634 /* FriendsModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,8 +166,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB9AD8972CA8B8FF00582634 /* FriendsVM.swift in Sources */,
+				CB9AD8992CA8B91200582634 /* UserVM.swift in Sources */,
 				CB69F5D72CA810C900F95219 /* TabBarController.swift in Sources */,
 				CB69F5D32CA810C900F95219 /* AppDelegate.swift in Sources */,
+				CB9AD89D2CA8B93500582634 /* FriendsModel.swift in Sources */,
+				CB9AD89B2CA8B92800582634 /* UserModel.swift in Sources */,
 				CB69F5D52CA810C900F95219 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
