@@ -115,6 +115,7 @@ class FriendsVC: UIViewController {
     private let userView = UserView()
     private let friendsEmptyView = FriendsEmptyView()
     private let tableView = UITableView()
+    private var invitationTotalHeight: CGFloat = 0
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -125,7 +126,41 @@ class FriendsVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        selectAScenario()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        friendsEmptyView.isHidden = false
+        tableView.isHidden = true
+        invitationTotalHeight = 0
+        view.layoutIfNeeded()
+    }
+}
 
+fileprivate extension FriendsVC {
+    
+    func observeViewModel() {
+        
+        friendsVM.$uniqueFriends
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateUI()
+            }
+            .store(in: &cancellables)
+        
+        friendsVM.$invitations
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // TODO
+                self?.setupInvitationView()
+            }
+            .store(in: &cancellables)
+    }
+    
+    func selectAScenario() {
         let alert = UIAlertController(title: "Choose a Scenario", message: nil, preferredStyle: .alert)
         Scenario.allCases.forEach { scenario in
             alert.addAction(UIAlertAction(title: scenario.title, style: .default, handler: { [weak self] _ in
@@ -134,44 +169,6 @@ class FriendsVC: UIViewController {
             }))
         }
         present(alert, animated: true, completion: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        friendsEmptyView.isHidden = false
-        tableView.isHidden = true
-    }
-}
-
-fileprivate extension FriendsVC {
-    
-    private func observeViewModel() {
-        
-        friendsVM.$uniqueFriends
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.updateUI()
-            }
-            .store(in: &cancellables)
-        
-        friendsVM.$invitations
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                // TODO
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func updateUI() {
-        setupUserView()
-        if friendsVM.rawFriends.isEmpty {
-            friendsEmptyView.isHidden = false
-            setupFriendEmptyView()
-        } else {
-            tableView.isHidden = false
-            setupTableView()
-            tableView.reloadData()
-        }
     }
 }
 
@@ -203,6 +200,18 @@ fileprivate extension FriendsVC {
         }
     }
     
+    private func updateUI() {
+        setupUserView()
+        if friendsVM.rawFriends.isEmpty {
+            friendsEmptyView.isHidden = false
+            setupFriendEmptyView()
+        } else {
+            tableView.isHidden = false
+            setupTableView()
+            tableView.reloadData()
+        }
+    }
+    
     func setupUserView() {
         view.addSubview(userView)
         userView.backgroundColor = .white
@@ -211,7 +220,7 @@ fileprivate extension FriendsVC {
             userView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             userView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             userView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            userView.heightAnchor.constraint(equalToConstant: 135)
+            userView.heightAnchor.constraint(equalToConstant: 135 + invitationTotalHeight)
         ])
     }
     
@@ -224,6 +233,65 @@ fileprivate extension FriendsVC {
             friendsEmptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             friendsEmptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    func setupInvitationView() {
+
+        if let previousStackView = view.viewWithTag(.invitationStackViewTag) as? UIStackView {
+            previousStackView.removeFromSuperview()
+        }
+
+        let invitationStackView = UIStackView()
+        invitationStackView.axis = .vertical
+        invitationStackView.spacing = 10
+        invitationStackView.tag = .invitationStackViewTag  // Set a unique tag to ensure it can be found and deleted later
+        view.addSubview(invitationStackView)
+
+        invitationStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            invitationStackView.topAnchor.constraint(equalTo: userView.userIdLabel.bottomAnchor, constant: 25),
+            invitationStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            invitationStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -30)
+        ])
+
+        for friend in friendsVM.invitations {
+            let newInvitationView = InvitationView()
+            newInvitationView.nameLabel.text = friend.name
+
+            newInvitationView.layer.cornerRadius = 10
+            // shadow
+            newInvitationView.layer.shadowColor = UIColor.systemGray2.cgColor
+            newInvitationView.layer.shadowOffset = CGSize(width: 0, height: 4)
+            newInvitationView.layer.shadowRadius = 6
+            newInvitationView.layer.shadowOpacity = 0.4
+
+            newInvitationView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                newInvitationView.heightAnchor.constraint(equalToConstant: 70)
+            ])
+
+            invitationStackView.addArrangedSubview(newInvitationView)
+        }
+
+        // 計算 stackView 的總高度
+        invitationTotalHeight = invitationStackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height + 20
+        print("===stackView total height=== \(invitationTotalHeight)")
+
+        updateUserViewHeight()
+    }
+
+    func updateUserViewHeight() {
+        userView.constraints.forEach { constraint in
+            if constraint.firstAttribute == .height {
+                userView.removeConstraint(constraint)
+            }
+        }
+
+        NSLayoutConstraint.activate([
+            userView.heightAnchor.constraint(equalToConstant: 135 + invitationTotalHeight)
+        ])
+
+        view.layoutIfNeeded()
     }
 }
 
@@ -271,6 +339,95 @@ extension FriendsVC {
     }
 }
 
+class InvitationView: UIView {
+    
+    let imageView = UIImageView()
+    let stackView = UIStackView()
+    let nameLabel = UILabel()
+    let captionLabel = UILabel()
+    let imageButtonAgree = UIButton()
+    let imageButtonReject = UIButton()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .white
+        setupUI()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+fileprivate extension InvitationView {
+    
+    func setupUI() {
+        imageView.image = UIImage(named: "imgFriendsList")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        nameLabel.text = .placeholder
+        nameLabel.font = UIFont.systemFont(ofSize: 16)
+        nameLabel.textAlignment = .left
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        captionLabel.text = "邀請你成為好友 : )"
+        captionLabel.font = UIFont.systemFont(ofSize: 13)
+        captionLabel.textColor = .systemGray2
+        captionLabel.textAlignment = .left
+        captionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        var config = UIButton.Configuration.plain()
+        config.baseForegroundColor = .systemPink
+        config.baseBackgroundColor = .red
+        config.image = UIImage(systemName: "checkmark.circle")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 22))
+        imageButtonAgree.configuration = config
+        imageButtonAgree.translatesAutoresizingMaskIntoConstraints = false
+        
+        config.baseForegroundColor = .systemGray3
+        config.baseBackgroundColor = .red
+        config.image = UIImage(systemName: "xmark.circle")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 22))
+        imageButtonReject.configuration = config
+        imageButtonReject.translatesAutoresizingMaskIntoConstraints = false
+        
+      
+        stackView.axis = .vertical
+        stackView.spacing = 5
+        stackView.alignment = .leading
+        stackView.addArrangedSubview(nameLabel)
+        stackView.addArrangedSubview(captionLabel)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(imageView)
+        addSubview(stackView)
+        addSubview(imageButtonAgree)
+        addSubview(imageButtonReject)
+    }
+    
+    func setupConstraints() {
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 40),
+            imageView.heightAnchor.constraint(equalToConstant: 40),
+            
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 15),
+            
+            imageButtonAgree.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageButtonAgree.trailingAnchor.constraint(equalTo: imageButtonReject.leadingAnchor, constant: -15),
+            imageButtonAgree.widthAnchor.constraint(equalToConstant: 30),
+            imageButtonAgree.heightAnchor.constraint(equalToConstant: 30),
+            
+            imageButtonReject.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageButtonReject.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            imageButtonReject.widthAnchor.constraint(equalToConstant: 30),
+            imageButtonReject.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+}
+
 class FriendCell: UITableViewCell {
     
     let friendImageView = UIImageView()
@@ -278,6 +435,7 @@ class FriendCell: UITableViewCell {
     let transferButton = UIButton()
     let moreButton = UIButton()
     let friendIsTop = UIImageView()
+    let separatorLineView = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -286,7 +444,7 @@ class FriendCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupUI()
+        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -297,6 +455,7 @@ fileprivate extension FriendCell {
         setupFriendButtons()
         setupFriendName()
         setupFriendTop()
+        setupSeparatorLine()
     }
     
     func setupFriendImageView() {
@@ -317,7 +476,7 @@ fileprivate extension FriendCell {
     func setupFriendButtons() {
         
         var config = UIButton.Configuration.filled()
-        var titleAttr = AttributedString("•••")
+        var titleAttr = AttributedString(.placeholder)
 
         titleAttr.font = .systemFont(ofSize: 14, weight: .bold)
         config.attributedTitle = titleAttr
@@ -360,7 +519,7 @@ fileprivate extension FriendCell {
     }
     
     func setupFriendName() {
-        friendNameLabel.text = "•••"
+        friendNameLabel.text = .placeholder
         friendNameLabel.textColor = .darkGray
         friendNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         addSubview(friendNameLabel)
@@ -384,6 +543,18 @@ fileprivate extension FriendCell {
             friendIsTop.trailingAnchor.constraint(equalTo: friendImageView.leadingAnchor, constant: -6)
         ])
     }
+    
+    func setupSeparatorLine() {
+        separatorLineView.backgroundColor = .systemGray5
+        addSubview(separatorLineView)
+        separatorLineView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            separatorLineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1),
+            separatorLineView.leadingAnchor.constraint(equalTo: friendNameLabel.leadingAnchor, constant: 0),
+            separatorLineView.trailingAnchor.constraint(equalTo: moreButton.trailingAnchor),
+            separatorLineView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+    }
 }
 
 extension FriendCell {
@@ -394,7 +565,7 @@ extension FriendCell {
     
     func updateStatus(with status: Int) {
         var config = UIButton.Configuration.filled()
-        var titleAttr = AttributedString(status == 2 ? "邀請中" : "•••")
+        var titleAttr = AttributedString(status == 2 ? "邀請中" : .placeholder)
         titleAttr.font = .systemFont(ofSize: 14, weight: .bold)
         config.attributedTitle = titleAttr
         config.baseForegroundColor = .systemGray3
@@ -410,7 +581,7 @@ extension FriendCell {
 class UserView: UIView {
     
     private let userNameLabel = UILabel()
-    private let userIdLabel = UILabel()
+    let userIdLabel = UILabel()
     private let userImageView = UIImageView()
     private let buttonArrow = UIButton()
     
@@ -444,7 +615,7 @@ fileprivate extension UserView {
     
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
-        userIdLabel.text = "KOKO ID: \(user.kokoid ?? "•••")"
+        userIdLabel.text = "KOKO ID: \(user.kokoid ?? .placeholder)"
     }
     
     func moveUnderline(to button: UIButton) {
@@ -484,7 +655,7 @@ fileprivate extension UserView {
     }
     
     func setupUserName() {
-        userNameLabel.text = "•••"
+        userNameLabel.text = .placeholder
         userNameLabel.textColor = .darkGray
         userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         
@@ -744,4 +915,12 @@ extension UIButton {
     )
     setAttributedTitle(titleString, for: .normal)
   }
+}
+
+extension String {
+    static let placeholder = "•••"
+}
+
+extension Int {
+    static let invitationStackViewTag = 1001
 }
