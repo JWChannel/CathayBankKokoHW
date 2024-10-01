@@ -106,35 +106,85 @@ enum Scenario: CaseIterable {
     }
 }
 
+import Combine
+
 class FriendsVC: UIViewController {
     
+    private let friendsVM = FriendsVM()
+    private let userVM = UserVM()
     private let userView = UserView()
-    private let userViewModel = UserVM()
-    let friendsEmptyView = FriendsEmptyView()
-    private let friendsViewModel = FriendsVM()
+    private let friendsEmptyView = FriendsEmptyView()
+    private let tableView = UITableView()
+    
+    private var cancellables = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUserView()
-        fetchUserInfo()
-        
-        view.addSubview(friendsEmptyView)
-        friendsEmptyView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            friendsEmptyView.topAnchor.constraint(equalTo: userView.bottomAnchor),
-            friendsEmptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            friendsEmptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            friendsEmptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        observeViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        let alert = UIAlertController(title: "Choose a Scenario", message: nil, preferredStyle: .alert)
+        Scenario.allCases.forEach { scenario in
+            alert.addAction(UIAlertAction(title: scenario.title, style: .default, handler: { [weak self] _ in
+                self?.friendsVM.scenario = scenario
+                self?.fetchData()
+            }))
+        }
+        present(alert, animated: true, completion: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        friendsEmptyView.isHidden = false
+        tableView.isHidden = true
     }
 }
 
 fileprivate extension FriendsVC {
     
-    func fetchUserInfo() {
+    private func observeViewModel() {
+        
+        friendsVM.$uniqueFriends
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateUI()
+            }
+            .store(in: &cancellables)
+        
+        friendsVM.$invitations
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // TODO
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateUI() {
+        setupUserView()
+        if friendsVM.rawFriends.isEmpty {
+            friendsEmptyView.isHidden = false
+            setupFriendEmptyView()
+        } else {
+            tableView.isHidden = false
+            setupTableView()
+            tableView.reloadData()
+        }
+    }
+}
+
+fileprivate extension FriendsVC {
+    
+    func fetchData() {
+        friendsVM.rawFriends.removeAll()
+        friendsVM.uniqueFriends.removeAll()
+        friendsVM.invitations.removeAll()
+        
         Task {
             do {
-                let user = try await userViewModel.fetchUsers()
+                let user = try await userVM.fetchUsers()
                 if let firstUser = user.first {
                     userView.updateUserInfo(with: firstUser)
                 }
@@ -146,7 +196,7 @@ fileprivate extension FriendsVC {
         
         Task {
             do {
-                try await friendsViewModel.fetchFriendsXTimes()
+                try await friendsVM.fetchFriendsTaskGroup()
             } catch {
                 print(error)
             }
@@ -163,6 +213,197 @@ fileprivate extension FriendsVC {
             userView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             userView.heightAnchor.constraint(equalToConstant: 135)
         ])
+    }
+    
+    func setupFriendEmptyView() {
+        view.addSubview(friendsEmptyView)
+        friendsEmptyView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            friendsEmptyView.topAnchor.constraint(equalTo: userView.bottomAnchor),
+            friendsEmptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            friendsEmptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            friendsEmptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
+extension FriendsVC: UITableViewDelegate, UITableViewDataSource {
+
+    func setupTableView() {
+        tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(FriendCell.self, forCellReuseIdentifier: "\(FriendCell.self)")
+        view.addSubview(tableView)
+
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: userView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+}
+
+extension FriendsVC {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return friendsVM.uniqueFriends.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(FriendCell.self)", for: indexPath) as? FriendCell else { return UITableViewCell() }
+        let friend = friendsVM.uniqueFriends[indexPath.row]
+        cell.friendNameLabel.text = friend.name
+        cell.updateStatus(with: friend.status)
+        cell.updateTopStatus(isTop: friend.isTop)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
+}
+
+class FriendCell: UITableViewCell {
+    
+    let friendImageView = UIImageView()
+    let friendNameLabel = UILabel()
+    let transferButton = UIButton()
+    let moreButton = UIButton()
+    let friendIsTop = UIImageView()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+}
+
+fileprivate extension FriendCell {
+    
+    func setupUI() {
+        setupFriendImageView()
+        setupFriendButtons()
+        setupFriendName()
+        setupFriendTop()
+    }
+    
+    func setupFriendImageView() {
+        friendImageView.image = UIImage(named: "imgFriendsList")
+        friendImageView.layer.cornerRadius = 20
+        friendImageView.clipsToBounds = true
+        friendImageView.contentMode = .scaleAspectFill
+        addSubview(friendImageView)
+        friendImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            friendImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            friendImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 50),
+            friendImageView.widthAnchor.constraint(equalToConstant: 40),
+            friendImageView.heightAnchor.constraint(equalToConstant: 40)
+        ])
+    }
+    
+    func setupFriendButtons() {
+        
+        var config = UIButton.Configuration.filled()
+        var titleAttr = AttributedString("•••")
+
+        titleAttr.font = .systemFont(ofSize: 14, weight: .bold)
+        config.attributedTitle = titleAttr
+        config.baseForegroundColor = .systemGray3
+        config.baseBackgroundColor = .clear
+        config.background.strokeColor = .systemGray3
+        config.background.strokeWidth = 0
+        config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8)
+        config.cornerStyle = .medium
+        moreButton.configuration = config
+        addSubview(moreButton)
+        
+        titleAttr = AttributedString("轉帳")
+        titleAttr.font = .systemFont(ofSize: 14, weight: .regular)
+        config.attributedTitle = titleAttr
+        config.baseForegroundColor = .systemPink
+        config.background.strokeColor = .systemPink
+        config.background.strokeWidth = 1
+        
+        transferButton.configuration = config
+        addSubview(transferButton)
+        
+        // Content Hugging Priority
+        moreButton.setContentHuggingPriority(.required, for: .horizontal)
+        transferButton.setContentHuggingPriority(.required, for: .horizontal)
+        // Content Compression Resistance Priority
+        transferButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+        moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+        
+        transferButton.translatesAutoresizingMaskIntoConstraints = false
+        moreButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            moreButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            moreButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            transferButton.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: -10),
+            transferButton.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
+    }
+    
+    func setupFriendName() {
+        friendNameLabel.text = "•••"
+        friendNameLabel.textColor = .darkGray
+        friendNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        addSubview(friendNameLabel)
+        
+        friendNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
+        friendNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            friendNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            friendNameLabel.leadingAnchor.constraint(equalTo: friendImageView.trailingAnchor, constant: 20),
+            friendNameLabel.trailingAnchor.constraint(equalTo: transferButton.leadingAnchor, constant: -10),
+        ])
+    }
+    
+    func setupFriendTop() {
+        friendIsTop.image = UIImage(named: "icFriendsTop")
+        addSubview(friendIsTop)
+        friendIsTop.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            friendIsTop.centerYAnchor.constraint(equalTo: centerYAnchor),
+            friendIsTop.trailingAnchor.constraint(equalTo: friendImageView.leadingAnchor, constant: -6)
+        ])
+    }
+}
+
+extension FriendCell {
+    
+    func updateTopStatus(isTop: String) {
+         friendIsTop.image = (isTop == "1") ? UIImage(named: "icFriendsStar") : nil
+     }
+    
+    func updateStatus(with status: Int) {
+        var config = UIButton.Configuration.filled()
+        var titleAttr = AttributedString(status == 2 ? "邀請中" : "•••")
+        titleAttr.font = .systemFont(ofSize: 14, weight: .bold)
+        config.attributedTitle = titleAttr
+        config.baseForegroundColor = .systemGray3
+        config.baseBackgroundColor = .clear
+        config.background.strokeColor = .systemGray3
+        config.background.strokeWidth = (status == 2) ? 1 : 0
+        config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8)
+        config.cornerStyle = .medium
+        moreButton.configuration = config
     }
 }
 
@@ -203,7 +444,7 @@ fileprivate extension UserView {
     
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
-        userIdLabel.text = "KOKO ID: \(user.kokoid ?? "......") "
+        userIdLabel.text = "KOKO ID: \(user.kokoid ?? "•••")"
     }
     
     func moveUnderline(to button: UIButton) {
@@ -235,36 +476,36 @@ fileprivate extension UserView {
         userImageView.contentMode = .scaleAspectFill
         userImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-            userImageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            userImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
             userImageView.widthAnchor.constraint(equalToConstant: 52),
             userImageView.heightAnchor.constraint(equalToConstant: 52)
         ])
     }
     
     func setupUserName() {
-        userNameLabel.text = "......"
+        userNameLabel.text = "•••"
         userNameLabel.textColor = .darkGray
         userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         
         addSubview(userNameLabel)
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
-            userNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
+            userNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+            userNameLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30)
         ])
     }
     
     func setupUserIdWithArrow() {
-        userIdLabel.text = "KOKO ID: ......"
+        userIdLabel.text = "KOKO ID: •••"
         userIdLabel.textColor = .darkGray
         userIdLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         
         addSubview(userIdLabel)
         userIdLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            userIdLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 55),
-            userIdLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30)
+            userIdLabel.topAnchor.constraint(equalTo: topAnchor, constant: 55),
+            userIdLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30)
         ])
         
         buttonArrow.setImage(UIImage(named: "icInfoBackDeepGray"), for: .normal)
@@ -311,15 +552,15 @@ fileprivate extension UserView {
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            separatorLineView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0),
-            separatorLineView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
-            separatorLineView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            separatorLineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+            separatorLineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+            separatorLineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
             separatorLineView.heightAnchor.constraint(equalToConstant: 1)
         ])
         
         NSLayoutConstraint.activate([
             buttonStackView.bottomAnchor.constraint(equalTo: separatorLineView.bottomAnchor, constant: -10),
-            buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 32),
+            buttonStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 32),
             buttonStackView.heightAnchor.constraint(equalToConstant: 25)
         ])
         
@@ -378,8 +619,8 @@ fileprivate extension FriendsEmptyView {
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 30),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 30),
             imageView.widthAnchor.constraint(equalToConstant: 245),
             imageView.heightAnchor.constraint(equalToConstant: 172)
         ])
@@ -396,7 +637,7 @@ fileprivate extension FriendsEmptyView {
         textLabelBold.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textLabelBold.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 41),
-            textLabelBold.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+            textLabelBold.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
         
         // 與好友們一起用 KOKO 聊起來！
@@ -410,7 +651,7 @@ fileprivate extension FriendsEmptyView {
         textLabelRegular.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textLabelRegular.topAnchor.constraint(equalTo: textLabelBold.bottomAnchor, constant: 10),
-            textLabelRegular.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+            textLabelRegular.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     
@@ -423,7 +664,7 @@ fileprivate extension FriendsEmptyView {
         addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             addFriendButton.topAnchor.constraint(equalTo: textLabelRegular.bottomAnchor, constant: 30),
-            addFriendButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            addFriendButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             addFriendButton.widthAnchor.constraint(equalToConstant: 192),
             addFriendButton.heightAnchor.constraint(equalToConstant: 40)
         ])
@@ -480,7 +721,7 @@ fileprivate extension FriendsEmptyView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: addFriendButton.bottomAnchor, constant: 37),
-            stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
 }

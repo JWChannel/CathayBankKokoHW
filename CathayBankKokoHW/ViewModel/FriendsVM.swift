@@ -7,13 +7,14 @@
 
 import Foundation
 
-class FriendsVM {
+class FriendsVM: ObservableObject {
 
     var rawFriends: [Friend] = []
-    var uniqueFriends: [Friend] = []
-    var scenario: Scenario = .friendsOnly
+    @Published var uniqueFriends: [Friend] = []
+    @Published var invitations: [Friend] = []
+    var scenario: Scenario = .friendsWithInvitations
 
-    func fetchFriendsXTimes() async throws {
+    func fetchFriendsTaskGroup() async throws {
 
          try await withThrowingTaskGroup(of: [Friend].self) { group in
              for urlString in scenario.scenarioURL {
@@ -28,28 +29,16 @@ class FriendsVM {
                  self.rawFriends.append(contentsOf: processUpdateDate(for: friends))
              }
              
-             print("===1=== \(rawFriends)")
-
-             uniqueFriends = filterUniqueFriends(rawFriends)
+             print("===raw=== \(rawFriends)")
              
-             print("===2=== \(uniqueFriends)")
+             uniqueFriends = filterUniqueFriends(rawFriends)
+             print("===unique=== \(uniqueFriends)")
+             
+             filterInvitations(uniqueFriends)
+             print("=== invitations === \(invitations)")
          }
-     }
-    
-    func processUpdateDate(for friends: [Friend]) -> [Friend] {
-        return friends.map { friend in
-            var updatedFriend = friend
-            updatedFriend.updateDate = friend.updateDate.replacingOccurrences(of: "/", with: "")
-            return updatedFriend
-        }
     }
     
-    func convertToDate(_ dateString: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        return dateFormatter.date(from: dateString)
-    }
-
     func filterUniqueFriends(_ friends: [Friend]) -> [Friend] {
         var uniqueFriendsDict: [String: Friend] = [:]
 
@@ -64,8 +53,32 @@ class FriendsVM {
                 uniqueFriendsDict[friend.fid] = friend
             }
         }
+        
+        let uniqueFriends = Array(uniqueFriendsDict.values).sorted(by: { $0.fid < $1.fid })
 
-        return Array(uniqueFriendsDict.values).sorted(by: { $0.fid < $1.fid })
+        return uniqueFriends
+    }
+    
+    private func filterInvitations(_ uniqueFriends: [Friend]) {
+        for friend in uniqueFriends {
+             if friend.status == 2 {
+                 self.invitations.append(friend)
+             }
+         }
+    }
+    
+    private func processUpdateDate(for friends: [Friend]) -> [Friend] {
+        return friends.map { friend in
+            var updatedFriend = friend
+            updatedFriend.updateDate = friend.updateDate.replacingOccurrences(of: "/", with: "")
+            return updatedFriend
+        }
+    }
+    
+    private func convertToDate(_ dateString: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        return dateFormatter.date(from: dateString)
     }
 
     func fetchFriends(from url: URL) async throws -> [Friend] {
