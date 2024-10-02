@@ -11,7 +11,7 @@ class FriendsVM: ObservableObject {
 
     var rawFriends: [Friend] = []
     @Published var uniqueFriends: [Friend] = []
-    @Published var invitations: [Friend] = []
+    var invitations: [Friend] = []
     var scenario: Scenario = .friendsWithInvitations
 
     func fetchFriendsTaskGroup() async throws {
@@ -84,6 +84,21 @@ class FriendsVM: ObservableObject {
     func fetchFriends(from url: URL) async throws -> [Friend] {
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoData = try JSONDecoder().decode(FriendsData.self, from: data)
+        
+//        // mock data
+//        let response = [
+//            Friend(name: "Judy", status: 2, isTop: "0", fid: "1001", updateDate: "2024/09/29"),
+//            Friend(name: "Mary", status: 1, isTop: "0", fid: "1002", updateDate: "2024/09/28"),
+//            Friend(name: "Tomsdfasdfasdfasdfasdfasdfasdfasdf", status: 2, isTop: "0", fid: "1003", updateDate: "2024/09/27"),
+//            Friend(name: "John", status: 2, isTop: "1", fid: "1004", updateDate: "2024/09/26"),
+//            Friend(name: "Peter", status: 2, isTop: "0", fid: "1005", updateDate: "2024/09/25"),
+//            Friend(name: "David", status: 2, isTop: "0", fid: "1006", updateDate: "2024/09/24"),
+//            Friend(name: "Alice", status: 2, isTop: "0", fid: "1007", updateDate: "2024/09/23"),
+//            Friend(name: "Bob", status: 2, isTop: "0", fid: "1008", updateDate: "2024/09/22"),
+//            Friend(name: "Cathy", status: 2, isTop: "0", fid: "1009", updateDate: "2024/09/21"),
+//        
+//        ]
+//        return response
         return decoData.response
     }
 }
