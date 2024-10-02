@@ -184,58 +184,60 @@ fileprivate extension UserView {
 extension UserView {
     
     func setupInvitationView(with invitations: [Friend]?) {
-          guard let invitations = invitations else { return }
-          var prevInvitationCard: InvitationCard? = nil
-
-          for (index, friend) in invitations.enumerated() {
-              let newInvitationCard = InvitationCard()
-              newInvitationCard.nameLabel.text = friend.name
-              newInvitationCard.layer.cornerRadius = 10
-
-              newInvitationCard.layer.shadowColor = UIColor.systemGray2.cgColor
-              newInvitationCard.layer.shadowOffset = CGSize(width: 0, height: 4)
-              newInvitationCard.layer.shadowRadius = 6
-              newInvitationCard.layer.shadowOpacity = 0.4
-
-              addSubview(newInvitationCard)
-              newInvitationCard.translatesAutoresizingMaskIntoConstraints = false
-
-              switch index {
-              case 0:
-                  NSLayoutConstraint.activate([
-                      newInvitationCard.topAnchor.constraint(equalTo: userIdLabel.bottomAnchor, constant: 35),
-                      newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
-                      newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
-                      newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
-                  ])
-                  bringSubviewToFront(newInvitationCard)
-              default:
-                  if let previousCard = prevInvitationCard {
-                      NSLayoutConstraint.activate([
-                          newInvitationCard.topAnchor.constraint(equalTo: previousCard.bottomAnchor, constant: 10),
-                          newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
-                          newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
-                          newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
-                      ])
-                  }
-              }
-              
-              let tap = UITapGestureRecognizer(target: self, action: #selector(handleInvitationTapped(_:)))
-              newInvitationCard.tapAreaButton.addGestureRecognizer(tap)
-
-              prevInvitationCard = newInvitationCard
-          }
-
-          invitationViewHeight = CGFloat(invitations.count) * .invitationViewHeightPreset + CGFloat(invitations.count - 1) * .invitationViewSpacePreset
-
-          updateUserViewHeight(plus: invitationViewHeight)
-      }
+        guard let invitations = invitations else { return }
+        var prevInvitationCard: InvitationCard? = nil
+        
+        for (index, friend) in invitations.enumerated() {
+            let newInvitationCard = InvitationCard()
+            newInvitationCard.nameLabel.text = friend.name
+            newInvitationCard.layer.cornerRadius = 10
+            
+            newInvitationCard.layer.shadowColor = UIColor.systemGray2.cgColor
+            newInvitationCard.layer.shadowOffset = CGSize(width: 0, height: 4)
+            newInvitationCard.layer.shadowRadius = 6
+            newInvitationCard.layer.shadowOpacity = 0.4
+            
+            addSubview(newInvitationCard)
+            newInvitationCard.translatesAutoresizingMaskIntoConstraints = false
+            
+            switch index {
+            case 0:
+                NSLayoutConstraint.activate([
+                    newInvitationCard.topAnchor.constraint(equalTo: userIdLabel.bottomAnchor, constant: 35),
+                    newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+                    newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
+                    newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
+                ])
+                bringSubviewToFront(newInvitationCard)
+            default:
+                if let previousCard = prevInvitationCard {
+                    NSLayoutConstraint.activate([
+                        newInvitationCard.topAnchor.constraint(equalTo: previousCard.bottomAnchor, constant: 10),
+                        newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+                        newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
+                        newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
+                    ])
+                    
+                    insertSubview(newInvitationCard, belowSubview: prevInvitationCard!) // will affect the order of subviews
+                }
+            }
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(handleInvitationTapped(_:)))
+            newInvitationCard.tapAreaButton.addGestureRecognizer(tap)
+            
+            prevInvitationCard = newInvitationCard
+        }
+        
+        invitationViewHeight = CGFloat(invitations.count) * .invitationViewHeightPreset + CGFloat(invitations.count - 1) * .invitationViewSpacePreset
+        
+        updateUserViewHeight(plus: invitationViewHeight)
+    }
 }
 
 extension UserView {
-
+    
     func updateUserViewHeight(plus invitationViewHeight: CGFloat) {
-      
+        
         constraints.forEach { constraint in
             if constraint.firstAttribute == .height {
                 removeConstraint(constraint)
@@ -258,7 +260,7 @@ extension UserView {
 extension UserView {
     
     @objc func handleInvitationTapped(_ sender: UITapGestureRecognizer) {
-        let invitationCards = subviews.filter { $0 is InvitationCard }
+        let invitationCards = subviews.filter { $0 is InvitationCard }.reversed() // reversed() b/c affected by belowSubview
         
         switch isStacked {
         case true:
