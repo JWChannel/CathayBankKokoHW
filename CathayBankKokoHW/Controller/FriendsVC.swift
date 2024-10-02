@@ -15,9 +15,6 @@ class FriendsVC: UIViewController {
     private let userView = UserView()
     private let friendsEmptyView = FriendsEmptyView()
     private let friendsTableView = FriendsTableView()
-    private var invitationViewHeight: CGFloat = 0.0
-    private var isStacked = false
-
     private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -120,7 +117,7 @@ fileprivate extension FriendsVC {
             userView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             userView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             userView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-            // leave userView.heightAnchor blank for later
+            // Leave the userView.heightAnchor unset for later adjustment.
         ])
     }
 
