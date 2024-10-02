@@ -19,6 +19,8 @@ class UserView: UIView {
     private let underlineView = UIView()
     let separatorLineView = UIView()
     private var underlineonstraint: NSLayoutConstraint?
+    var invitationViewHeight: CGFloat = 0.0
+    var isStacked = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -176,5 +178,111 @@ fileprivate extension UserView {
             underlineView.widthAnchor.constraint(equalToConstant: 20),
             underlineView.heightAnchor.constraint(equalToConstant: 4)
         ])
+    }
+}
+
+extension UserView {
+    
+    func setupInvitationView(with invitations: [Friend]?) {
+          guard let invitations = invitations else { return }
+          var prevInvitationCard: InvitationCard? = nil
+
+          for (index, friend) in invitations.enumerated() {
+              let newInvitationCard = InvitationCard()
+              newInvitationCard.nameLabel.text = friend.name
+              newInvitationCard.layer.cornerRadius = 10
+
+              newInvitationCard.layer.shadowColor = UIColor.systemGray2.cgColor
+              newInvitationCard.layer.shadowOffset = CGSize(width: 0, height: 4)
+              newInvitationCard.layer.shadowRadius = 6
+              newInvitationCard.layer.shadowOpacity = 0.4
+
+              addSubview(newInvitationCard)
+              newInvitationCard.translatesAutoresizingMaskIntoConstraints = false
+
+              switch index {
+              case 0:
+                  NSLayoutConstraint.activate([
+                      newInvitationCard.topAnchor.constraint(equalTo: userIdLabel.bottomAnchor, constant: 35),
+                      newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+                      newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
+                      newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
+                  ])
+                  bringSubviewToFront(newInvitationCard)
+              default:
+                  if let previousCard = prevInvitationCard {
+                      NSLayoutConstraint.activate([
+                          newInvitationCard.topAnchor.constraint(equalTo: previousCard.bottomAnchor, constant: 10),
+                          newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+                          newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
+                          newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
+                      ])
+                  }
+              }
+              
+              let tap = UITapGestureRecognizer(target: self, action: #selector(handleInvitationTapped(_:)))
+              newInvitationCard.tapAreaButton.addGestureRecognizer(tap)
+
+              prevInvitationCard = newInvitationCard
+          }
+
+          invitationViewHeight = CGFloat(invitations.count) * .invitationViewHeightPreset + CGFloat(invitations.count - 1) * .invitationViewSpacePreset
+
+          updateUserViewHeight(plus: invitationViewHeight)
+      }
+}
+
+extension UserView {
+
+    func updateUserViewHeight(plus invitationViewHeight: CGFloat) {
+      
+        constraints.forEach { constraint in
+            if constraint.firstAttribute == .height {
+                removeConstraint(constraint)
+            }
+        }
+        NSLayoutConstraint.activate([
+            heightAnchor.constraint(equalToConstant: .userViewHeightPreset + invitationViewHeight)
+        ])
+        self.superview?.layoutIfNeeded()
+    }
+    
+    func resetInvitationView() {
+        self.subviews.filter { $0 is InvitationCard }.forEach { card in
+            card.removeFromSuperview()
+        }
+        self.superview?.layoutIfNeeded()
+    }
+}
+
+extension UserView {
+    
+    @objc func handleInvitationTapped(_ sender: UITapGestureRecognizer) {
+        let invitationCards = subviews.filter { $0 is InvitationCard }
+        
+        switch isStacked {
+        case true:
+            for (index, card) in invitationCards.enumerated() {
+                guard index != 0 else { continue }
+                UIView.animate(withDuration: 0.3) {
+                    card.transform = .identity
+                }
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.updateUserViewHeight(plus: self.invitationViewHeight)
+            }
+            
+        case false:
+            for (index, card) in invitationCards.enumerated() {
+                guard index != 0 else { continue }
+                UIView.animate(withDuration: 0.3) {
+                    card.transform = CGAffineTransform(translationX: 0, y: -(.invitationViewHeightPreset + .invitationViewSpacePreset) * CGFloat(index) + 10).scaledBy(x: 0.93, y: 0.93)
+                }
+            }
+            UIView.animate(withDuration: 0.3) {
+                self.updateUserViewHeight(plus: .invitationViewHeightPreset)
+            }
+        }
+        isStacked.toggle()
     }
 }

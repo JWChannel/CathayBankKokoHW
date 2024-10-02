@@ -114,4 +114,3 @@ fileprivate extension InvitationCard {
         ])
     }
 }
-
