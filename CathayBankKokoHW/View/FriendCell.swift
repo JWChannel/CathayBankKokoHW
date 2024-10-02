@@ -42,7 +42,7 @@ fileprivate extension FriendCell {
         friendImageView.layer.cornerRadius = 20
         friendImageView.clipsToBounds = true
         friendImageView.contentMode = .scaleAspectFill
-        addSubview(friendImageView)
+        contentView.addSubview(friendImageView)
         friendImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             friendImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -66,7 +66,7 @@ fileprivate extension FriendCell {
         config.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8)
         config.cornerStyle = .medium
         moreButton.configuration = config
-        addSubview(moreButton)
+        contentView.addSubview(moreButton)
         
         titleAttr = AttributedString("轉帳")
         titleAttr.font = .systemFont(ofSize: 14, weight: .regular)
@@ -76,7 +76,7 @@ fileprivate extension FriendCell {
         config.background.strokeWidth = 1
         
         transferButton.configuration = config
-        addSubview(transferButton)
+        contentView.addSubview(transferButton)
         
         // Content Hugging Priority
         moreButton.setContentHuggingPriority(.required, for: .horizontal)
@@ -101,7 +101,7 @@ fileprivate extension FriendCell {
         friendNameLabel.text = .placeholder
         friendNameLabel.textColor = .darkGray
         friendNameLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        addSubview(friendNameLabel)
+        contentView.addSubview(friendNameLabel)
         
         friendNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         
@@ -115,7 +115,7 @@ fileprivate extension FriendCell {
     
     func setupFriendTop() {
         friendIsTop.image = UIImage(named: "icFriendsTop")
-        addSubview(friendIsTop)
+        contentView.addSubview(friendIsTop)
         friendIsTop.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             friendIsTop.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -125,7 +125,7 @@ fileprivate extension FriendCell {
     
     func setupSeparatorLine() {
         separatorLineView.backgroundColor = .systemGray5
-        addSubview(separatorLineView)
+        contentView.addSubview(separatorLineView)
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             separatorLineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -1),
