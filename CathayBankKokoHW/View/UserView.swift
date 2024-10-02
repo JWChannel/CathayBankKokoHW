@@ -186,8 +186,10 @@ extension UserView {
     func setupInvitationView(with invitations: [Friend]?) {
         guard let invitations = invitations else { return }
         var prevInvitationCard: InvitationCard? = nil
+        let limit = invitations.count > 2 ? 2 : invitations.count
         
         for (index, friend) in invitations.enumerated() {
+            guard index < limit else { break }
             let newInvitationCard = InvitationCard()
             newInvitationCard.nameLabel.text = friend.name
             newInvitationCard.layer.cornerRadius = 10
@@ -228,7 +230,7 @@ extension UserView {
             prevInvitationCard = newInvitationCard
         }
         
-        invitationViewHeight = CGFloat(invitations.count) * .invitationViewHeightPreset + CGFloat(invitations.count - 1) * .invitationViewSpacePreset
+        invitationViewHeight = CGFloat(limit) * .invitationViewHeightPreset + CGFloat(limit - 1) * .invitationViewSpacePreset
         
         updateUserViewHeight(plus: invitationViewHeight)
     }
