@@ -29,13 +29,13 @@ class FriendsVM: ObservableObject {
                  self.rawFriends.append(contentsOf: processUpdateDate(for: friends))
              }
              
-             print("===raw=== \(rawFriends)")
+//             print("===raw=== \(rawFriends)")
              
              uniqueFriends = filterUniqueFriends(rawFriends)
-             print("===unique=== \(uniqueFriends)")
+//             print("===unique=== \(uniqueFriends)")
              
              filterInvitations(uniqueFriends)
-             print("=== invitations === \(invitations)")
+//             print("=== invitations === \(invitations)")
          }
     }
     

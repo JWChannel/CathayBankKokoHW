@@ -14,6 +14,7 @@ class UserView: UIView {
     private let userImageView = UIImageView()
     private let buttonArrow = UIButton()
     
+    private let buttonStackView = UIStackView()
     private let friendsButton = UIButton()
     private let chatButton = UIButton()
     private let underlineView = UIView()
@@ -64,13 +65,14 @@ extension UserView {
 fileprivate extension UserView {
     
     func setupUI() {
-        setupUserImageView()
-        setupUserName()
-        setupUserIdWithArrow()
-        setupButtonUI()
+        setupImage()
+        setupName()
+        setupIdWithArrow()
+        setupButtonsAndUnderline()
+        setupConstraints()
     }
     
-    func setupUserImageView() {
+    func setupImage() {
         userImageView.image = UIImage(named: "imgFriendsFemaleDefault")
         addSubview(userImageView)
         userImageView.layer.cornerRadius = 25
@@ -78,54 +80,27 @@ fileprivate extension UserView {
         userImageView.clipsToBounds = true
         userImageView.contentMode = .scaleAspectFill
         userImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            userImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
-            userImageView.widthAnchor.constraint(equalToConstant: 52),
-            userImageView.heightAnchor.constraint(equalToConstant: 52)
-        ])
     }
     
-    func setupUserName() {
+    func setupName() {
         userNameLabel.text = .placeholder
         userNameLabel.textColor = .darkGray
         userNameLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        
         addSubview(userNameLabel)
         userNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            userNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 30),
-            userNameLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
-            userNameLabel.heightAnchor.constraint(equalToConstant: 18),
-        ])
     }
     
-    func setupUserIdWithArrow() {
+    func setupIdWithArrow() {
         userIdLabel.text = "KOKO ID: •••"
         userIdLabel.textColor = .darkGray
         userIdLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        
         addSubview(userIdLabel)
-        userIdLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            userIdLabel.topAnchor.constraint(equalTo: topAnchor, constant: 55),
-            userIdLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
-            userIdLabel.heightAnchor.constraint(equalToConstant: 18),
-        ])
         
         buttonArrow.setImage(UIImage(named: "icInfoBackDeepGray"), for: .normal)
         addSubview(buttonArrow)
-        buttonArrow.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            buttonArrow.centerYAnchor.constraint(equalTo: userIdLabel.centerYAnchor),
-            buttonArrow.leadingAnchor.constraint(equalTo: userIdLabel.trailingAnchor, constant: 0),
-            buttonArrow.widthAnchor.constraint(equalToConstant: 16),
-            buttonArrow.heightAnchor.constraint(equalToConstant: 16)
-        ])
     }
     
-    func setupButtonUI() {
-        
+    func setupButtonsAndUnderline() {
         friendsButton.setTitle("好友", for: .normal)
         friendsButton.setTitleColor(.darkGray, for: .normal)
         friendsButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
@@ -136,7 +111,6 @@ fileprivate extension UserView {
         chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         chatButton.addTarget(self, action: #selector(chatButtonTapped), for: .touchUpInside)
         
-        let buttonStackView = UIStackView()
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 36
         buttonStackView.alignment = .bottom
@@ -155,6 +129,38 @@ fileprivate extension UserView {
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         underlineView.translatesAutoresizingMaskIntoConstraints = false
         separatorLineView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func setupConstraints() {
+        
+        NSLayoutConstraint.activate([
+            userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            userImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
+            userImageView.widthAnchor.constraint(equalToConstant: 52),
+            userImageView.heightAnchor.constraint(equalToConstant: 52)
+        ])
+        
+        NSLayoutConstraint.activate([
+            userNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+            userNameLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            userNameLabel.heightAnchor.constraint(equalToConstant: 18),
+        ])
+        
+        userIdLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            userIdLabel.topAnchor.constraint(equalTo: topAnchor, constant: 55),
+            userIdLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            userIdLabel.heightAnchor.constraint(equalToConstant: 18),
+        ])
+        
+       
+        buttonArrow.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            buttonArrow.centerYAnchor.constraint(equalTo: userIdLabel.centerYAnchor),
+            buttonArrow.leadingAnchor.constraint(equalTo: userIdLabel.trailingAnchor, constant: 0),
+            buttonArrow.widthAnchor.constraint(equalToConstant: 16),
+            buttonArrow.heightAnchor.constraint(equalToConstant: 16)
+        ])
         
         NSLayoutConstraint.activate([
             separatorLineView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
@@ -162,7 +168,6 @@ fileprivate extension UserView {
             separatorLineView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
             separatorLineView.heightAnchor.constraint(equalToConstant: 1)
         ])
-        
         
         NSLayoutConstraint.activate([
             buttonStackView.bottomAnchor.constraint(equalTo: separatorLineView.topAnchor, constant: -10),
@@ -239,17 +244,18 @@ extension UserView {
 extension UserView {
     
     func updateUserViewHeight(plus invitationViewHeight: CGFloat) {
-        
-        constraints.forEach { constraint in
-            if constraint.firstAttribute == .height {
+        for constraint in constraints {
+            if constraint.firstAttribute == .height && constraint.firstItem === self {
                 removeConstraint(constraint)
             }
         }
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: .userViewHeightPreset + invitationViewHeight)
         ])
+        
         self.superview?.layoutIfNeeded()
     }
+
     
     func resetInvitationView() {
         self.subviews.filter { $0 is InvitationCard }.forEach { card in
