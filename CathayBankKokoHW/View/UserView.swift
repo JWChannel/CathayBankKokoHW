@@ -239,8 +239,8 @@ extension UserView {
     
     func setupInvitationView(with invitations: [Friend]?) {
         guard let invitations = invitations else { return }
-        let count = invitations.count
-        updateNotificationLabel(friendsNotificationLabel, count: count)
+        let inviteCount = invitations.count
+        updateNotificationLabel(friendsNotificationLabel, count: inviteCount)
         updateNotificationLabel(chatNotificationLabel, count: 99)
         
         var prevInvitationCard: InvitationCard? = nil
@@ -292,7 +292,7 @@ extension UserView {
         
         inviteSectionHeight = originalInviteSectionHeight
         
-        updateUserViewHeightAnchor(.userViewHeightPreset + inviteSectionHeight) // userView.heightAnchor
+        updateUserViewHeightAnchor((inviteCount <= 0 ? -20 : 0) + .userViewHeightPreset + inviteSectionHeight) // userView.heightAnchor
     }
 }
 
