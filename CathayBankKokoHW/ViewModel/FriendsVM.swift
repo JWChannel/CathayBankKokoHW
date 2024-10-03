@@ -11,8 +11,7 @@ final class FriendsVM: ObservableObject {
 
     var rawFriends: [Friend] = []
     @Published var uniqueFriends: [Friend] = []
-    var invitations: [Friend] = []
-    var scenario: Scenario = .friendsWithInvitations
+    var scenario: Scenario = .noFriends
 
     func fetchFriendsTaskGroup() async throws {
 
@@ -28,11 +27,8 @@ final class FriendsVM: ObservableObject {
              for try await friends in group {
                  self.rawFriends.append(contentsOf: processUpdateDate(for: friends))
              }
-//             print("===raw=== \(rawFriends)")
+             
              uniqueFriends = filterUniqueFriends(rawFriends)
-//             print("===unique=== \(uniqueFriends)")
-             filterInvitations(uniqueFriends)
-//             print("=== invitations === \(invitations)")
          }
     }
     
@@ -54,14 +50,6 @@ final class FriendsVM: ObservableObject {
         let uniqueFriends = Array(uniqueFriendsDict.values).sorted(by: { $0.fid < $1.fid })
 
         return uniqueFriends
-    }
-    
-    private func filterInvitations(_ uniqueFriends: [Friend]) {
-        for friend in uniqueFriends {
-             if friend.status == 2 {
-                 self.invitations.append(friend)
-             }
-         }
     }
     
     private func processUpdateDate(for friends: [Friend]) -> [Friend] {

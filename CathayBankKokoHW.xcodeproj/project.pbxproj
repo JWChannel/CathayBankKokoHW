@@ -117,7 +117,7 @@
 			children = (
 				CB69F5D22CA810C900F95219 /* AppDelegate.swift */,
 				CB69F5D42CA810C900F95219 /* SceneDelegate.swift */,
-				CB6876942CAC611E00AA01F6 /* Scenario.swift */,
+				CB8DB5562CAED9EE008A9D26 /* Scenario */,
 				CB68768C2CAC5FC400AA01F6 /* Controller */,
 				CB6876872CAC5F4500AA01F6 /* View */,
 				CB9AD89E2CA8B93F00582634 /* ViewModel */,
@@ -129,6 +129,14 @@
 				CB69F5E02CA810CA00F95219 /* Info.plist */,
 			);
 			path = CathayBankKokoHW;
+			sourceTree = "<group>";
+		};
+		CB8DB5562CAED9EE008A9D26 /* Scenario */ = {
+			isa = PBXGroup;
+			children = (
+				CB6876942CAC611E00AA01F6 /* Scenario.swift */,
+			);
+			path = Scenario;
 			sourceTree = "<group>";
 		};
 		CB9AD89E2CA8B93F00582634 /* ViewModel */ = {

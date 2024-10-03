@@ -43,7 +43,7 @@ private extension FriendsVC {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.setupUI()
-                self?.userView.setupInvitationView(with: self?.friendsVM.invitations)
+                self?.userView.setupInvitationView(with: self?.friendsVM.uniqueFriends.filter { $0.status == 2 } ?? [])
                 self?.friendsTableView.friends = self?.friendsVM.uniqueFriends ?? []
             }
             .store(in: &cancellables)
@@ -63,7 +63,6 @@ private extension FriendsVC {
     func fetchData() {
         friendsVM.rawFriends.removeAll()
         friendsVM.uniqueFriends.removeAll()
-        friendsVM.invitations.removeAll()
 
         Task {
             do {
