@@ -157,5 +157,5 @@ private extension FriendsEmptyView {
 }
 
 #Preview {
-    FriendCell()
+    FriendsEmptyView()
 }
