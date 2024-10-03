@@ -21,6 +21,6 @@ final class CathayBankKokoHWTests: XCTestCase {
         XCTAssertEqual(viewModel.uniqueFriends.count, 3)
         XCTAssertEqual(viewModel.uniqueFriends.first?.fid, "1001") // same fid
         XCTAssertEqual(viewModel.uniqueFriends.first?.name, "Johnny") // new name
-        XCTAssertEqual(viewModel.uniqueFriends.first?.updateDate, "20240930") // new date
+        XCTAssertEqual(viewModel.uniqueFriends.first?.updateDate, "20240930") // newer date
     }
 }
