@@ -8,9 +8,10 @@
 import UIKit
 
 extension UIColor {
-    static let G1 = UIColor.froggreen
-    static let G2 = UIColor.booger
-    static let G3 = UIColor.applegreen
+    static let frogGreen = UIColor.froggreen
+    static let boogerGreen = UIColor.booger
+    static let appleGreen = UIColor.applegreen
+    static let softPink = UIColor.softpink
 }
 
 extension UIButton {

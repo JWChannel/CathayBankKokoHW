@@ -28,7 +28,7 @@ private extension SearchBar {
         autocorrectionType = .no
         spellCheckingType = .no
         returnKeyType = .search
-        enablesReturnKeyAutomatically = true
+        enablesReturnKeyAutomatically = false
         translatesAutoresizingMaskIntoConstraints = false
     }
 }

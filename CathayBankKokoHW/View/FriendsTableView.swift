@@ -15,9 +15,12 @@ final class FriendsTableView: UIView {
 
     var friends: [Friend] = [] {
         didSet {
+            filteredFriends = friends
             tableView.reloadData()
         }
     }
+    
+    private var filteredFriends: [Friend] = []
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,6 +46,7 @@ private extension FriendsTableView {
     }
     
     func setupSearchBar() {
+        searchBar.delegate = self
         addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -85,7 +89,7 @@ private extension FriendsTableView {
 extension FriendsTableView: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        return filteredFriends.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -93,7 +97,7 @@ extension FriendsTableView: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "\(FriendCell.self)", for: indexPath) as? FriendCell else {
             return UITableViewCell()
         }
-        let friend = friends[indexPath.row]
+        let friend = filteredFriends[indexPath.row]
         cell.friendNameLabel.text = friend.name
         cell.updateStatus(with: friend.status)
         cell.updateTopStatus(isTop: friend.isTop)
@@ -109,6 +113,32 @@ extension FriendsTableView: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
+    }
+}
+
+extension FriendsTableView: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        switch searchText.isEmpty {
+        case true:
+            filteredFriends = friends
+        case false:
+            filteredFriends = friends.filter { $0.name.contains(searchText) }
+        }
+        tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        let blankOnTap = UITapGestureRecognizer(target: self.searchBar, action: #selector(UIView.endEditing))
+        self.searchBar.addGestureRecognizer(blankOnTap)
+        
+        // notification center notice userView height to change
+        
+        
     }
 }
 

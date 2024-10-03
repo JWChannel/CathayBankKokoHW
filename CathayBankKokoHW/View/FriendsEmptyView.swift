@@ -103,11 +103,11 @@ private extension FriendsEmptyView {
         gradientLayer.cornerRadius = 20
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        gradientLayer.colors = [UIColor.G1.cgColor, UIColor.G2.cgColor]
+        gradientLayer.colors = [UIColor.frogGreen.cgColor, UIColor.boogerGreen.cgColor]
         // inset CALayer
         addFriendButton.layer.insertSublayer(gradientLayer, at: 0)
         // shadow
-        addFriendButton.layer.shadowColor = UIColor.G2.cgColor
+        addFriendButton.layer.shadowColor = UIColor.boogerGreen.cgColor
         addFriendButton.layer.shadowOffset = CGSize(width: 0, height: 4)
         addFriendButton.layer.shadowRadius = 8
         addFriendButton.layer.shadowOpacity = 0.4
@@ -126,7 +126,7 @@ private extension FriendsEmptyView {
     
     func setCaptions() {
         // 幫助好友更快找到你？設定 KOKO ID
-        bottomtextLabel.text = "幫助好友更快找到你 ？"
+        bottomtextLabel.text = "幫助好友更快找到你 ？ "
         bottomtextLabel.textColor = .lightGray
         bottomtextLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         bottomtextLabel.textAlignment = .center

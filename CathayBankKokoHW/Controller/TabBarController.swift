@@ -13,6 +13,7 @@ final class TabBarController: UITabBarController {
         super.viewDidLoad()
         setupTabBarColor()
         setupTabBar()
+        addTopLineToTabBar()
         selectedTab()
     }
 }
@@ -45,6 +46,7 @@ private extension UITabBarController {
         let homeVC = UIViewController()
         homeVC.view.backgroundColor = .white
         homeVC.tabBarItem = UITabBarItem(title: "", image: UIImage(named: "icTabbarHomeOff"), tag: 2)
+        homeVC.tabBarItem.imageInsets = UIEdgeInsets(top: -4, left: 0, bottom: 4, right: 0)
         
         let manageVC = UIViewController()
         manageVC.view.backgroundColor = .white
@@ -57,6 +59,19 @@ private extension UITabBarController {
         settingsVC.tabBarItem.imageInsets = insets
         
         viewControllers = [productVC, FriendsNavController, homeVC, manageVC, settingsVC]
+    }
+    
+    func addTopLineToTabBar() {
+        let topLine = UIView()
+        topLine.backgroundColor = .systemGray5
+        topLine.translatesAutoresizingMaskIntoConstraints = false
+        tabBar.insertSubview(topLine, at: 0)
+        NSLayoutConstraint.activate([
+            topLine.topAnchor.constraint(equalTo: tabBar.topAnchor),
+            topLine.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
+            topLine.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor),
+            topLine.heightAnchor.constraint(equalToConstant: 0.5)
+        ])
     }
 }
 

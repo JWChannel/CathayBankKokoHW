@@ -17,10 +17,13 @@ final class UserView: UIView {
     private let buttonStackView = UIStackView()
     private let friendsButton = UIButton()
     private let chatButton = UIButton()
+    private var friendsNotificationLabel: PaddingLabel?
+    private var chatNotificationLabel: PaddingLabel?
     private let underlineView = UIView()
     let separatorLineView = UIView()
-    private var underlineonstraint: NSLayoutConstraint?
+    private var underlineConstraint: NSLayoutConstraint?
     
+    var userViewHeight: NSLayoutConstraint?
     var invitationViewHeight: CGFloat = 0.0
     var isStacked = false
     
@@ -36,19 +39,11 @@ final class UserView: UIView {
 
 private extension UserView {
     
-    @objc func friendsButtonTapped() {
-        moveUnderline(to: friendsButton)
-    }
-    
-    @objc func chatButtonTapped() {
-        moveUnderline(to: chatButton)
-    }
-    
-    func moveUnderline(to button: UIButton) {
-        underlineonstraint?.isActive = false
-        underlineonstraint = underlineView.centerXAnchor.constraint(equalTo: button.centerXAnchor)
-        underlineonstraint?.isActive = true
-        
+    @objc func moveUnderline(_ sender: UIButton) {
+        underlineConstraint?.isActive = false
+        underlineConstraint = underlineView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
+        underlineConstraint?.isActive = true
+
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
         }
@@ -76,7 +71,7 @@ private extension UserView {
     
     func setupImage() {
         userImageView.image = UIImage(named: "imgFriendsFemaleDefault")
-        addSubview(userImageView)
+        self.addSubview(userImageView)
         userImageView.layer.cornerRadius = 25
         userImageView.backgroundColor = .clear
         userImageView.clipsToBounds = true
@@ -106,12 +101,12 @@ private extension UserView {
         friendsButton.setTitle("好友", for: .normal)
         friendsButton.setTitleColor(.darkGray, for: .normal)
         friendsButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        friendsButton.addTarget(self, action: #selector(friendsButtonTapped), for: .touchUpInside)
+        friendsButton.addTarget(self, action: #selector(moveUnderline(_:)), for: .touchUpInside)
         
         chatButton.setTitle("聊天", for: .normal)
         chatButton.setTitleColor(.darkGray, for: .normal)
         chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        chatButton.addTarget(self, action: #selector(chatButtonTapped), for: .touchUpInside)
+        chatButton.addTarget(self, action: #selector(moveUnderline(_:)), for: .touchUpInside)
         
         buttonStackView.axis = .horizontal
         buttonStackView.spacing = 36
@@ -127,6 +122,31 @@ private extension UserView {
         
         separatorLineView.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         addSubview(separatorLineView)
+        
+        friendsNotificationLabel = createNotificationLabel()
+        if let friendsNotificationLabel = friendsNotificationLabel {
+            addSubview(friendsNotificationLabel)
+            friendsNotificationLabel.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                friendsNotificationLabel.topAnchor.constraint(equalTo: friendsButton.topAnchor, constant: -6),
+                friendsNotificationLabel.leadingAnchor.constraint(equalTo: friendsButton.trailingAnchor, constant: 0),
+                friendsNotificationLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
+                friendsNotificationLabel.heightAnchor.constraint(equalToConstant: 20)
+            ])
+        }
+        
+        chatNotificationLabel = createNotificationLabel()
+        chatNotificationLabel?.text = "99+"
+        if let chatNotificationLabel = chatNotificationLabel {
+            addSubview(chatNotificationLabel)
+            chatNotificationLabel.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                chatNotificationLabel.topAnchor.constraint(equalTo: chatButton.topAnchor, constant: -6),
+                chatNotificationLabel.leadingAnchor.constraint(equalTo: chatButton.trailingAnchor, constant: 0),
+                chatNotificationLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 0),
+                chatNotificationLabel.heightAnchor.constraint(equalToConstant: 20)
+            ])
+        }
         
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         underlineView.translatesAutoresizingMaskIntoConstraints = false
@@ -176,8 +196,8 @@ private extension UserView {
             buttonStackView.heightAnchor.constraint(equalToConstant: 25),
         ])
         
-        underlineonstraint = underlineView.centerXAnchor.constraint(equalTo: friendsButton.centerXAnchor)
-        underlineonstraint?.isActive = true
+        underlineConstraint = underlineView.centerXAnchor.constraint(equalTo: friendsButton.centerXAnchor)
+        underlineConstraint?.isActive = true
         
         NSLayoutConstraint.activate([
             underlineView.topAnchor.constraint(equalTo: buttonStackView.bottomAnchor, constant: 6),
@@ -191,6 +211,10 @@ extension UserView {
     
     func setupInvitationView(with invitations: [Friend]?) {
         guard let invitations = invitations else { return }
+        let count = invitations.count
+        updateNotificationLabel(friendsNotificationLabel, count: count)
+        updateNotificationLabel(chatNotificationLabel, count: 99)
+        
         var prevInvitationCard: InvitationCard? = nil
         let limit = invitations.count > 2 ? 2 : invitations.count
         
@@ -238,21 +262,81 @@ extension UserView {
         
         invitationViewHeight = CGFloat(limit) * .invitationViewHeightPreset + CGFloat(limit - 1) * .invitationViewSpacePreset
         
-        updateUserViewHeight(plus: invitationViewHeight)
+        updateUserViewHeightAnchor(.userViewHeightPreset + invitationViewHeight) // userView.heightAnchor
+    }
+}
+
+private extension UserView {
+    
+    func updateNotificationLabel(_ notificationLabel: PaddingLabel?, count: Int) {
+        guard let notificationLabel = notificationLabel else { return }
+        
+        switch count {
+        case ...0:
+            notificationLabel.isHidden = true
+            notificationLabel.padding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
+        case 1..<99:
+            notificationLabel.isHidden = false
+            notificationLabel.text = "\(count)"
+            notificationLabel.padding = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+            
+        default: // count > 99
+            notificationLabel.isHidden = false
+            notificationLabel.text = "99+"
+            notificationLabel.padding = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        }
+    }
+
+    func createNotificationLabel() -> PaddingLabel {
+        let label = PaddingLabel()
+        label.textColor = .white
+        label.backgroundColor = .softpink
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.textAlignment = .center
+        label.layer.cornerRadius = 10
+        label.clipsToBounds = true
+        label.padding = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
+        return label
+    }
+    
+    class PaddingLabel: UILabel { // Since UILabel doesn't support contentInset -> created a custom UILabel subclass
+        var padding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
+        override func drawText(in rect: CGRect) {
+            let insetRect = rect.inset(by: padding)
+            super.drawText(in: insetRect)
+        }
+
+        override var intrinsicContentSize: CGSize {
+            let size = super.intrinsicContentSize
+            let width = size.width + padding.left + padding.right
+            let height = size.height + padding.top + padding.bottom
+            return CGSize(width: width, height: height)
+        }
     }
 }
 
 extension UserView {
     
-    func updateUserViewHeight(plus invitationViewHeight: CGFloat) {
+    func updateUserViewHeightAnchor(_ invitationViewHeight: CGFloat) { // userView.heightAnchor
         for constraint in constraints {
             if constraint.firstAttribute == .height && constraint.firstItem === self {
                 removeConstraint(constraint)
             }
         }
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: .userViewHeightPreset + invitationViewHeight)
-        ])
+        userViewHeight = self.heightAnchor.constraint(equalToConstant: invitationViewHeight)
+        userViewHeight?.isActive = true
+        
+        let isHidden = (invitationViewHeight <= 0) // true or false
+        userImageView.isHidden = isHidden
+        userNameLabel.isHidden = isHidden
+        userIdLabel.isHidden = isHidden
+        buttonArrow.isHidden = isHidden
+        buttonStackView.isHidden = isHidden
+        underlineView.isHidden = isHidden
+        friendsNotificationLabel?.isHidden = isHidden
+        chatNotificationLabel?.isHidden = isHidden
         
         self.superview?.layoutIfNeeded()
     }
@@ -279,8 +363,8 @@ extension UserView {
                     card.transform = .identity
                 }
             }
-            UIView.animate(withDuration: 0.3) {
-                self.updateUserViewHeight(plus: self.invitationViewHeight)
+            UIView.animate(withDuration: 0.3) { // userView.heightAnchor
+                self.updateUserViewHeightAnchor(.userViewHeightPreset + self.invitationViewHeight)
             }
             
         case false:
@@ -290,8 +374,8 @@ extension UserView {
                     card.transform = CGAffineTransform(translationX: 0, y: -(.invitationViewHeightPreset + .invitationViewSpacePreset) * CGFloat(index) + 10).scaledBy(x: 0.93, y: 0.93)
                 }
             }
-            UIView.animate(withDuration: 0.3) {
-                self.updateUserViewHeight(plus: .invitationViewHeightPreset)
+            UIView.animate(withDuration: 0.3) { // userView.heightAnchor
+                self.updateUserViewHeightAnchor(.userViewHeightPreset + .invitationViewHeightPreset)
             }
         }
         isStacked.toggle()
