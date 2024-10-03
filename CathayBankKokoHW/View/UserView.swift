@@ -263,7 +263,7 @@ extension UserView {
             switch index {
             case 0:
                 NSLayoutConstraint.activate([
-                    newInvitationCard.topAnchor.constraint(equalTo: userIdLabel.bottomAnchor, constant: 35),
+                    newInvitationCard.topAnchor.constraint(equalTo: userIdLabel.bottomAnchor, constant: 20),
                     newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
                     newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
                     newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationCardHeightPreset)

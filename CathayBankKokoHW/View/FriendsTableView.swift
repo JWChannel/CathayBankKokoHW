@@ -6,13 +6,15 @@
 //
 
 import UIKit
+import MJRefresh
 
 final class FriendsTableView: UIView {
 
+    var friendsVM: FriendsVM
     private let addFriendButton = UIButton()
     private let searchBar = SearchBar()
     private let tableView = UITableView()
-
+    private var filteredFriends: [Friend] = []
     var friends: [Friend] = [] {
         didSet {
             filteredFriends = friends
@@ -20,14 +22,14 @@ final class FriendsTableView: UIView {
         }
     }
     
-    private var filteredFriends: [Friend] = []
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(friendsVM: FriendsVM) {
+        self.friendsVM = friendsVM
+        super.init(frame: .zero)
         setupAddFriendButton()
         setupSearchBar()
         setupTableView()
         setupConstraints()
+        setupMJRefresh()
     }
 
     required init?(coder: NSCoder) {
@@ -59,6 +61,20 @@ private extension FriendsTableView {
         tableView.register(FriendCell.self, forCellReuseIdentifier: "\(FriendCell.self)")
         addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    func setupMJRefresh() {
+        tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
+            Task {
+                do {
+                    try await self?.friendsVM.fetchFriendsTaskGroup()
+                } catch {
+                    print(error)
+                }
+                self?.tableView.reloadData()
+                await self?.tableView.mj_header?.endRefreshing()
+            }
+        })
     }
     
     func setupConstraints() {
@@ -142,8 +158,4 @@ extension FriendsTableView: UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         NotificationCenter.default.post(name: .searchBarDidEndEditing, object: nil)
     }
-}
-
-#Preview {
-    FriendsTableView()
 }

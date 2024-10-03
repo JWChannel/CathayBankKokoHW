@@ -31,7 +31,7 @@ private extension UITabBarController {
     }
     
     func setupTabBar() {
-        let insets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
+        let insets = UIEdgeInsets(top: 2, left: 0, bottom: -2, right: 0)
         
         let productVC = UIViewController()
         productVC.view.backgroundColor = .white

@@ -33,7 +33,7 @@ extension String {
 }
 
 extension CGFloat {
-    static let userViewHeightPreset = 135.0 + 40.0
+    static let userViewHeightPreset = 135.0 + 20.0
     static let invitationCardHeightPreset = 70.0
     static let invitationSectionSpacePreset = 10.0
 }

@@ -61,7 +61,7 @@
     }
 #endif
     
-    _activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    _activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
 }
 
 - (void)placeSubviews

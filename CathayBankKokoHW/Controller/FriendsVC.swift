@@ -8,15 +8,14 @@
 import UIKit
 import Combine
 
-fileprivate let realService = RealFriendsService() // For dependency injection
-
 final class FriendsVC: UIViewController {
-
-    private let friendsVM = FriendsVM(service: realService)
+    
+    private let realService = RealFriendsService() // For dependency injection
+    private lazy var friendsVM = FriendsVM(service: realService)
     private let userVM = UserVM()
     private let userView = UserView()
-    private let friendsEmptyView = FriendsEmptyView()
-    private let friendsTableView = FriendsTableView()
+    private let emptyView = FriendsEmptyView()
+    private lazy var tableView = FriendsTableView(friendsVM: friendsVM)
     private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -31,8 +30,8 @@ final class FriendsVC: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        friendsEmptyView.isHidden = false
-        friendsTableView.isHidden = true
+        emptyView.isHidden = false
+        tableView.isHidden = true
         userView.resetInvitationView()
     }
 }
@@ -45,8 +44,8 @@ private extension FriendsVC {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.setupUI()
-                self?.userView.setupInvitationView(with: self?.friendsVM.uniqueFriends.filter { $0.status == 2 } ?? [])
-                self?.friendsTableView.friends = self?.friendsVM.uniqueFriends ?? []
+                self?.userView.setupInvitationView(with: self?.friendsVM.uniqueFriends.filter { $0.status == 2 } )
+                self?.tableView.friends = self?.friendsVM.uniqueFriends ?? []
             }
             .store(in: &cancellables)
     }
@@ -90,9 +89,9 @@ private extension FriendsVC {
         setupUserView()
         switch friendsVM.rawFriends.isEmpty {
         case true:
-            friendsEmptyView.isHidden = false
+            emptyView.isHidden = false
             setupFriendEmptyView()
-            friendsTableView.isHidden = true
+            tableView.isHidden = true
         case false:
             switch friendsVM.scenario {
             case .noFriends:
@@ -102,20 +101,20 @@ private extension FriendsVC {
             case .friendsWithInvitations:
                 userView.inviteLimit = 4
             }
-            friendsEmptyView.isHidden = true
-            friendsTableView.isHidden = false
+            emptyView.isHidden = true
+            tableView.isHidden = false
             setupFriendsTableView()
         }
     }
 
     func setupFriendEmptyView() {
-        view.addSubview(friendsEmptyView)
-        friendsEmptyView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyView)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            friendsEmptyView.topAnchor.constraint(equalTo: userView.bottomAnchor),
-            friendsEmptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            friendsEmptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            friendsEmptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            emptyView.topAnchor.constraint(equalTo: userView.bottomAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 
@@ -132,14 +131,14 @@ private extension FriendsVC {
     }
 
     func setupFriendsTableView() {
-        if friendsTableView.superview == nil {
-            view.addSubview(friendsTableView)
-            friendsTableView.translatesAutoresizingMaskIntoConstraints = false
+        if tableView.superview == nil {
+            view.addSubview(tableView)
+            tableView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                friendsTableView.topAnchor.constraint(equalTo: userView.bottomAnchor),
-                friendsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                friendsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                friendsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+                tableView.topAnchor.constraint(equalTo: userView.bottomAnchor),
+                tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             ])
         }
     }
