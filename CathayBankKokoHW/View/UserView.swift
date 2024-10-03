@@ -10,7 +10,7 @@ import UIKit
 final class UserView: UIView {
     
     private let userNameLabel = UILabel()
-    let userIdLabel = UILabel()
+    private let userIdLabel = UILabel()
     private let userImageView = UIImageView()
     private let buttonArrow = UIButton()
     
@@ -20,12 +20,14 @@ final class UserView: UIView {
     private var friendsNotificationLabel: PaddingLabel?
     private var chatNotificationLabel: PaddingLabel?
     private let underlineView = UIView()
-    let separatorLineView = UIView()
+    private let separatorLineView = UIView()
     private var underlineConstraint: NSLayoutConstraint?
     
-    var userViewHeight: NSLayoutConstraint?
-    var invitationViewHeight: CGFloat = 0.0
-    var isStacked = false
+    var inviteLimit: Int = 2
+    private var userViewHeight: NSLayoutConstraint?
+    private var inviteSectionHeight: CGFloat = 0.0
+    private var originalInviteSectionHeight: CGFloat = 0.0
+    private var isStacked = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,6 +36,10 @@ final class UserView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -55,7 +61,7 @@ extension UserView {
     
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
-        userIdLabel.text = "KOKO ID: \(user.kokoid ?? .placeholder)"
+        userIdLabel.text = "KOKO ID：\(user.kokoid ?? "")"
     }
 }
 
@@ -67,6 +73,7 @@ private extension UserView {
         setupIdWithArrow()
         setupButtonsAndUnderline()
         setupConstraints()
+        setupNotifications()
     }
     
     func setupImage() {
@@ -88,7 +95,7 @@ private extension UserView {
     }
     
     func setupIdWithArrow() {
-        userIdLabel.text = "KOKO ID: •••"
+        userIdLabel.text = "KOKO ID"
         userIdLabel.textColor = .darkGray
         userIdLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         addSubview(userIdLabel)
@@ -209,6 +216,27 @@ private extension UserView {
 
 extension UserView {
     
+    func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSearchBarDidBeginEditing), name: .searchBarDidBeginEditing, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSearchBarDidEndEditing), name: .searchBarDidEndEditing, object: nil)
+    }
+    
+    @objc private func handleSearchBarDidBeginEditing() {
+        UIView.animate(withDuration: 0.3) {
+            self.updateUserViewHeightAnchor(0)
+        }
+    }
+    
+    @objc private func handleSearchBarDidEndEditing() {
+        UIView.animate(withDuration: 0.3) {
+            self.updateUserViewHeightAnchor(.userViewHeightPreset + self.inviteSectionHeight)
+        }
+    }
+}
+
+
+extension UserView {
+    
     func setupInvitationView(with invitations: [Friend]?) {
         guard let invitations = invitations else { return }
         let count = invitations.count
@@ -216,7 +244,7 @@ extension UserView {
         updateNotificationLabel(chatNotificationLabel, count: 99)
         
         var prevInvitationCard: InvitationCard? = nil
-        let limit = invitations.count > 2 ? 2 : invitations.count
+        let limit = invitations.count > inviteLimit ? inviteLimit : invitations.count
         
         for (index, friend) in invitations.enumerated() {
             guard index < limit else { break }
@@ -238,7 +266,7 @@ extension UserView {
                     newInvitationCard.topAnchor.constraint(equalTo: userIdLabel.bottomAnchor, constant: 35),
                     newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
                     newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
-                    newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
+                    newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationCardHeightPreset)
                 ])
                 bringSubviewToFront(newInvitationCard)
             default:
@@ -247,7 +275,7 @@ extension UserView {
                         newInvitationCard.topAnchor.constraint(equalTo: previousCard.bottomAnchor, constant: 10),
                         newInvitationCard.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 30),
                         newInvitationCard.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),
-                        newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationViewHeightPreset)
+                        newInvitationCard.heightAnchor.constraint(equalToConstant: .invitationCardHeightPreset)
                     ])
                     
                     insertSubview(newInvitationCard, belowSubview: prevInvitationCard!) // will affect the order of subviews
@@ -260,9 +288,11 @@ extension UserView {
             prevInvitationCard = newInvitationCard
         }
         
-        invitationViewHeight = CGFloat(limit) * .invitationViewHeightPreset + CGFloat(limit - 1) * .invitationViewSpacePreset
+        originalInviteSectionHeight = CGFloat(limit) * .invitationCardHeightPreset + CGFloat(limit - 1) * .invitationSectionSpacePreset
         
-        updateUserViewHeightAnchor(.userViewHeightPreset + invitationViewHeight) // userView.heightAnchor
+        inviteSectionHeight = originalInviteSectionHeight
+        
+        updateUserViewHeightAnchor(.userViewHeightPreset + inviteSectionHeight) // userView.heightAnchor
     }
 }
 
@@ -317,29 +347,36 @@ private extension UserView {
     }
 }
 
+@MainActor
 extension UserView {
     
-    func updateUserViewHeightAnchor(_ invitationViewHeight: CGFloat) { // userView.heightAnchor
+    func updateUserViewHeightAnchor(_ height: CGFloat) { // userView.heightAnchor
         for constraint in constraints {
             if constraint.firstAttribute == .height && constraint.firstItem === self {
                 removeConstraint(constraint)
             }
         }
-        userViewHeight = self.heightAnchor.constraint(equalToConstant: invitationViewHeight)
+        userViewHeight = self.heightAnchor.constraint(equalToConstant: height)
         userViewHeight?.isActive = true
         
-        let isHidden = (invitationViewHeight <= 0) // true or false
-        userImageView.isHidden = isHidden
-        userNameLabel.isHidden = isHidden
-        userIdLabel.isHidden = isHidden
-        buttonArrow.isHidden = isHidden
-        buttonStackView.isHidden = isHidden
-        underlineView.isHidden = isHidden
-        friendsNotificationLabel?.isHidden = isHidden
-        chatNotificationLabel?.isHidden = isHidden
+        let isHidden = (height <= 0) // true or false
+        
+        switch (isHidden, self.isStacked) {
+        case (true, true): // If hidden and stacked
+            self.inviteSectionHeight = .invitationCardHeightPreset // Reset to the height of a single card, ensuring the inviteSection is stacked as well.
+        default:
+            self.inviteSectionHeight = self.originalInviteSectionHeight
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.alpha = isHidden ? 0 : 1 // Fade out if hidden, fade in if visible
+        }, completion: { _ in
+            self.isHidden = isHidden
+        })
         
         self.superview?.layoutIfNeeded()
     }
+                       
 
     
     func resetInvitationView() {
@@ -364,18 +401,18 @@ extension UserView {
                 }
             }
             UIView.animate(withDuration: 0.3) { // userView.heightAnchor
-                self.updateUserViewHeightAnchor(.userViewHeightPreset + self.invitationViewHeight)
+                self.updateUserViewHeightAnchor(.userViewHeightPreset + self.inviteSectionHeight)
             }
             
         case false:
             for (index, card) in invitationCards.enumerated() {
                 guard index != 0 else { continue }
                 UIView.animate(withDuration: 0.3) {
-                    card.transform = CGAffineTransform(translationX: 0, y: -(.invitationViewHeightPreset + .invitationViewSpacePreset) * CGFloat(index) + 10).scaledBy(x: 0.93, y: 0.93)
+                    card.transform = CGAffineTransform(translationX: 0, y: -(.invitationCardHeightPreset + .invitationSectionSpacePreset) * CGFloat(index) + 10).scaledBy(x: 0.93, y: 0.93)
                 }
             }
             UIView.animate(withDuration: 0.3) { // userView.heightAnchor
-                self.updateUserViewHeightAnchor(.userViewHeightPreset + .invitationViewHeightPreset)
+                self.updateUserViewHeightAnchor(.userViewHeightPreset + .invitationCardHeightPreset)
             }
         }
         isStacked.toggle()

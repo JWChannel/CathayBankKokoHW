@@ -87,11 +87,18 @@ private extension FriendsVC {
 
     func setupUI() {
         setupUserView()
-        if friendsVM.rawFriends.isEmpty {
+        switch friendsVM.rawFriends.isEmpty {
+        case true:
             friendsEmptyView.isHidden = false
             setupFriendEmptyView()
             friendsTableView.isHidden = true
-        } else {
+        case false:
+            switch friendsVM.scenario {
+            case .noFriends:
+                userView.inviteLimit = 0
+            case .friendsOnly, .friendsWithInvitations:
+                userView.inviteLimit = 4
+            }
             friendsEmptyView.isHidden = true
             friendsTableView.isHidden = false
             setupFriendsTableView()

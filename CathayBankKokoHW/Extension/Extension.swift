@@ -34,6 +34,11 @@ extension String {
 
 extension CGFloat {
     static let userViewHeightPreset = 135.0 + 40.0
-    static let invitationViewHeightPreset = 70.0
-    static let invitationViewSpacePreset = 10.0
+    static let invitationCardHeightPreset = 70.0
+    static let invitationSectionSpacePreset = 10.0
+}
+
+extension Notification.Name {
+    static let searchBarDidBeginEditing = Notification.Name("searchBarDidBeginEditing")
+    static let searchBarDidEndEditing = Notification.Name("searchBarDidEndEditing")
 }

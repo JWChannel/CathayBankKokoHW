@@ -133,12 +133,14 @@ extension FriendsTableView: UISearchBarDelegate {
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        let blankOnTap = UITapGestureRecognizer(target: self.searchBar, action: #selector(UIView.endEditing))
+        let blankOnTap = UITapGestureRecognizer(target: searchBar, action: #selector(UIView.endEditing))
         self.searchBar.addGestureRecognizer(blankOnTap)
-        
-        // notification center notice userView height to change
-        
-        
+
+        NotificationCenter.default.post(name: .searchBarDidBeginEditing, object: nil)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        NotificationCenter.default.post(name: .searchBarDidEndEditing, object: nil)
     }
 }
 

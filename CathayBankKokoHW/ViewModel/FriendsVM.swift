@@ -81,8 +81,7 @@ final class FriendsVM: ObservableObject {
     func fetchFriends(from url: URL) async throws -> [Friend] {
         let (data, _) = try await URLSession.shared.data(from: url)
         let decoData = try JSONDecoder().decode(FriendsData.self, from: data)
-        
-//        // mock data
+        // mock data
 //        let response = [
 //            Friend(name: "Judy", status: 2, isTop: "0", fid: "1001", updateDate: "2024/09/29"),
 //            Friend(name: "Mary", status: 1, isTop: "0", fid: "1002", updateDate: "2024/09/28"),
