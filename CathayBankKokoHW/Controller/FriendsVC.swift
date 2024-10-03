@@ -97,7 +97,7 @@ private extension FriendsVC {
             case .noFriends:
                 userView.inviteLimit = 0
             case .friendsOnly:
-                userView.inviteLimit = 4
+                userView.inviteLimit = 0
             case .friendsWithInvitations:
                 userView.inviteLimit = 4
             }

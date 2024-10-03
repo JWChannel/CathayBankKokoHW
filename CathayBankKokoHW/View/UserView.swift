@@ -244,7 +244,7 @@ extension UserView {
         updateNotificationLabel(chatNotificationLabel, count: 99)
         
         var prevInvitationCard: InvitationCard? = nil
-        let limit = invitations.count > inviteLimit ? inviteLimit : invitations.count
+        let limit = inviteCount > inviteLimit ? inviteLimit : inviteCount
         
         for (index, friend) in invitations.enumerated() {
             guard index < limit else { break }
@@ -292,7 +292,7 @@ extension UserView {
         
         inviteSectionHeight = originalInviteSectionHeight
         
-        updateUserViewHeightAnchor((inviteCount <= 0 ? -20 : 0) + .userViewHeightPreset + inviteSectionHeight) // userView.heightAnchor
+        updateUserViewHeightAnchor(.userViewHeightPreset + inviteSectionHeight) // userView.heightAnchor
     }
 }
 
