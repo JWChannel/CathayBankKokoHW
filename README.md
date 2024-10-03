@@ -7,30 +7,39 @@ It supports three different states of the user interface and handles asynchronou
 ## Features
 
 ### 1. Three UI States
-    ![Scenario](ReadMeImages/1-0.png)
+<p align="center">
+    <img src="ReadMeImages/1-0-scenario.png" alt="Scenario" width="200">
+</p>
 - **1-(1) No Friends**: Displays when there are no friends in the list.
-    ![No Friends](/mnt/data/1-0-corrected.png)
+
 - **1-(2) Friends Without Invitations**: Shows when there are friends, but no new invitations. (Note: The API still returns one invitation).
-    ![Friends Without Invitations](/mnt/data/1-1-corrected.png)
+
 - **1-(3) Friends with Invitations**: Displays when there are friends and the API returns two invitations.
-    ![Friends with Invitations](/mnt/data/1-2-corrected.png)
+
 
 ### 2. API Integration and Simulation
 
 The app makes asynchronous API requests to simulate the following scenarios:
 
 1. **No Friends**: Requests data from the API at `https://dimanyen.github.io/friend4.json` (No data returned for friends or invitations).
-    ![No Friends Scenario](ReadMeImages/1-1-no-friends.png)
+<p align="center">
+    <img src="ReadMeImages/1-1-no-friends.png" alt="No Friends Scenario" width="200">
+</p>
    
 2. **Friends Only**: Makes two API requests to:
     - `https://dimanyen.github.io/friend1.json`
     - `https://dimanyen.github.io/friend2.json`
    
     The results are combined into a list, and if any `fid` data is duplicated between the two, the app uses the record with the most recent `updateDate`.
-    ![Friends List Scenario](ReadMeImages/1-2.png)
+<p align="center">
+    <img src="ReadMeImages/1-2-friend-list.png" alt="Friends List Scenario" width="200">
+</p>
 
 3. **Friends with Invitations**: Makes a request to `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
-    ![Friends with Invitations Scenario](ReadMeImages/1-3-2-stacked.png)
+<p align="center">
+    <img src="ReadMeImages/1-3-1-expanded.png" alt="Friends with Invitations Scenario" width="200">
+    <img src="ReadMeImages/1-3-2-stacked.png" alt="Friends with Invitations Scenario" width="200">
+</p>
 
 ### 3. Search Bar Functionality
 
@@ -45,7 +54,9 @@ The following additional functionalities are included to enhance the user experi
     - The friend list uses **MJRefresh** to support pull-to-refresh functionality. This allows users to refresh the list by pulling it down, which triggers the API to fetch updated data again.
    
 2. **Search Bar Push**: When the search bar is tapped, it is pushed to the top under the `UINavigationBar` for better accessibility.
-    ![Search bar](ReadMeImages/1-3-3-search-bar.png)
+<p align="center">
+    <img src="ReadMeImages/1-3-3-search-bar.png" alt="Search bar" width="200">
+</p>
 
 3. **Collapsible Invitations**: The invitations section in the friend list supports a collapse and expand action for a cleaner interface.
 
