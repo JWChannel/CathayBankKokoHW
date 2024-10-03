@@ -7,7 +7,7 @@
 
 import UIKit
 
-class UserView: UIView {
+final class UserView: UIView {
     
     private let userNameLabel = UILabel()
     let userIdLabel = UILabel()
@@ -20,6 +20,7 @@ class UserView: UIView {
     private let underlineView = UIView()
     let separatorLineView = UIView()
     private var underlineonstraint: NSLayoutConstraint?
+    
     var invitationViewHeight: CGFloat = 0.0
     var isStacked = false
     
@@ -33,7 +34,7 @@ class UserView: UIView {
     }
 }
 
-fileprivate extension UserView {
+private extension UserView {
     
     @objc func friendsButtonTapped() {
         moveUnderline(to: friendsButton)
@@ -56,13 +57,14 @@ fileprivate extension UserView {
 
 @MainActor
 extension UserView {
+    
     func updateUserInfo(with user: User) {
         userNameLabel.text = user.name
         userIdLabel.text = "KOKO ID: \(user.kokoid ?? .placeholder)"
     }
 }
 
-fileprivate extension UserView {
+private extension UserView {
     
     func setupUI() {
         setupImage()
@@ -132,7 +134,6 @@ fileprivate extension UserView {
     }
     
     func setupConstraints() {
-        
         NSLayoutConstraint.activate([
             userImageView.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             userImageView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -30),

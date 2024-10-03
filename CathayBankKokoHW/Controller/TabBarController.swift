@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TabBarController: UITabBarController {
+final class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +17,7 @@ class TabBarController: UITabBarController {
     }
 }
 
-fileprivate extension UITabBarController {
+private extension UITabBarController {
     
     func selectedTab() {
         selectedIndex = 1

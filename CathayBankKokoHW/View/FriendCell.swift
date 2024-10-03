@@ -7,14 +7,14 @@
 
 import UIKit
 
-class FriendCell: UITableViewCell {
+final class FriendCell: UITableViewCell {
     
-    let friendImageView = UIImageView()
+    private let friendImageView = UIImageView()
     let friendNameLabel = UILabel()
-    let transferButton = UIButton()
-    let moreButton = UIButton()
-    let friendIsTop = UIImageView()
-    let separatorLineView = UIView()
+    private let transferButton = UIButton()
+    private let moreButton = UIButton()
+    private let friendIsTop = UIImageView()
+    private let separatorLineView = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -22,12 +22,11 @@ class FriendCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-fileprivate extension FriendCell {
+private extension FriendCell {
     
     func setupUI() {
         setupFriendImageView()

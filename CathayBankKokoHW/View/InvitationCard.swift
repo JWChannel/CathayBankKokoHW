@@ -7,14 +7,14 @@
 
 import UIKit
 
-class InvitationCard: UIView {
+final class InvitationCard: UIView {
     
-    let imageView = UIImageView()
-    let stackView = UIStackView()
+    private let imageView = UIImageView()
+    private let stackView = UIStackView()
     let nameLabel = UILabel()
-    let captionLabel = UILabel()
-    let imageButtonAgree = UIButton()
-    let imageButtonReject = UIButton()
+    private let captionLabel = UILabel()
+    private let imageButtonAgree = UIButton()
+    private let imageButtonReject = UIButton()
     let tapAreaButton = UIButton() // clear button layer
     
     override init(frame: CGRect) {
@@ -29,7 +29,7 @@ class InvitationCard: UIView {
     }
 }
 
-fileprivate extension InvitationCard {
+private extension InvitationCard {
     
     func setupUI() {
         imageView.image = UIImage(named: "imgFriendsList")

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FriendsVM: ObservableObject {
+final class FriendsVM: ObservableObject {
 
     var rawFriends: [Friend] = []
     @Published var uniqueFriends: [Friend] = []
@@ -28,12 +28,9 @@ class FriendsVM: ObservableObject {
              for try await friends in group {
                  self.rawFriends.append(contentsOf: processUpdateDate(for: friends))
              }
-             
 //             print("===raw=== \(rawFriends)")
-             
              uniqueFriends = filterUniqueFriends(rawFriends)
 //             print("===unique=== \(uniqueFriends)")
-             
              filterInvitations(uniqueFriends)
 //             print("=== invitations === \(invitations)")
          }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UserVM {
+final class UserVM {
     
     func fetchUsers() async throws -> [User] {
         let url = URL(string: "https://dimanyen.github.io/man.json")!

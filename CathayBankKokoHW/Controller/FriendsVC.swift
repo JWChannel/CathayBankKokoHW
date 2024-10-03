@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class FriendsVC: UIViewController {
+final class FriendsVC: UIViewController {
 
     private let friendsVM = FriendsVM()
     private let userVM = UserVM()
@@ -35,7 +35,7 @@ class FriendsVC: UIViewController {
     }
 }
 
-fileprivate extension FriendsVC {
+private extension FriendsVC {
 
     func observeViewModel() {
         friendsVM.$uniqueFriends

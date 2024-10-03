@@ -7,16 +7,16 @@
 
 import UIKit
 
-class FriendsEmptyView: UIView {
+final class FriendsEmptyView: UIView {
     
     private let imageView = UIImageView()
-    private let textLabelBold = UILabel()
-    private let textLabelRegular = UILabel()
+    private let titleTextLabel = UILabel()
+    private let descriptionTextLabel = UILabel()
  
     private let gradientLayer = CAGradientLayer()
     private let addFriendButton = UIButton()
     
-    private let textLabelSmall = UILabel()
+    private let bottomtextLabel = UILabel()
     private let kokoSettingButton = UIButton()
     
     override init(frame: CGRect) {
@@ -25,8 +25,7 @@ class FriendsEmptyView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupUI()
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func layoutSubviews() {
@@ -35,7 +34,7 @@ class FriendsEmptyView: UIView {
     }
 }
 
-fileprivate extension FriendsEmptyView {
+private extension FriendsEmptyView {
     
     func setupUI() {
         setupImageView()
@@ -45,7 +44,6 @@ fileprivate extension FriendsEmptyView {
     }
     
     func setupImageView() {
-        
         imageView.image = UIImage(named: "imgFriendsEmpty")
         imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
@@ -61,29 +59,29 @@ fileprivate extension FriendsEmptyView {
     func setupAddFriendText() {
         
         // 就從加好友開始吧：）
-        textLabelBold.text = "就從加好友開始吧 : )"
-        textLabelBold.textColor = .darkGray
-        textLabelBold.font = UIFont.systemFont(ofSize: 21, weight: .semibold)
-        textLabelBold.textAlignment = .center
-        addSubview(textLabelBold)
-        textLabelBold.translatesAutoresizingMaskIntoConstraints = false
+        titleTextLabel.text = "就從加好友開始吧 : )"
+        titleTextLabel.textColor = .darkGray
+        titleTextLabel.font = UIFont.systemFont(ofSize: 21, weight: .semibold)
+        titleTextLabel.textAlignment = .center
+        addSubview(titleTextLabel)
+        titleTextLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textLabelBold.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 41),
-            textLabelBold.centerXAnchor.constraint(equalTo: centerXAnchor)
+            titleTextLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 41),
+            titleTextLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
         
         // 與好友們一起用 KOKO 聊起來！
         // 還能互相收付款、發紅包喔：）
-        textLabelRegular.text = "與好友們一起用 KOKO 聊起來！\n還能互相收付款、發紅包喔 : )"
-        textLabelRegular.textColor = .lightGray
-        textLabelRegular.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        textLabelRegular.numberOfLines = 0
-        textLabelRegular.textAlignment = .center
-        addSubview(textLabelRegular)
-        textLabelRegular.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextLabel.text = "與好友們一起用 KOKO 聊起來！\n還能互相收付款、發紅包喔 : )"
+        descriptionTextLabel.textColor = .lightGray
+        descriptionTextLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        descriptionTextLabel.numberOfLines = 0
+        descriptionTextLabel.textAlignment = .center
+        addSubview(descriptionTextLabel)
+        descriptionTextLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textLabelRegular.topAnchor.constraint(equalTo: textLabelBold.bottomAnchor, constant: 10),
-            textLabelRegular.centerXAnchor.constraint(equalTo: centerXAnchor)
+            descriptionTextLabel.topAnchor.constraint(equalTo: titleTextLabel.bottomAnchor, constant: 10),
+            descriptionTextLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
     
@@ -95,7 +93,7 @@ fileprivate extension FriendsEmptyView {
         addSubview(addFriendButton)
         addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            addFriendButton.topAnchor.constraint(equalTo: textLabelRegular.bottomAnchor, constant: 30),
+            addFriendButton.topAnchor.constraint(equalTo: descriptionTextLabel.bottomAnchor, constant: 30),
             addFriendButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             addFriendButton.widthAnchor.constraint(equalToConstant: 192),
             addFriendButton.heightAnchor.constraint(equalToConstant: 40)
@@ -128,11 +126,11 @@ fileprivate extension FriendsEmptyView {
     
     func setCaptions() {
         // 幫助好友更快找到你？設定 KOKO ID
-        textLabelSmall.text = "幫助好友更快找到你 ？"
-        textLabelSmall.textColor = .lightGray
-        textLabelSmall.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        textLabelSmall.textAlignment = .center
-        addSubview(textLabelSmall)
+        bottomtextLabel.text = "幫助好友更快找到你 ？"
+        bottomtextLabel.textColor = .lightGray
+        bottomtextLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        bottomtextLabel.textAlignment = .center
+        addSubview(bottomtextLabel)
 
         let title = "設定 KOKO ID"
         kokoSettingButton.setTitle(title, for: .normal)
@@ -146,7 +144,7 @@ fileprivate extension FriendsEmptyView {
         stackView.axis = .horizontal
         stackView.spacing = 0
         stackView.alignment = .center
-        stackView.addArrangedSubview(textLabelSmall)
+        stackView.addArrangedSubview(bottomtextLabel)
         stackView.addArrangedSubview(kokoSettingButton)
         addSubview(stackView)
 

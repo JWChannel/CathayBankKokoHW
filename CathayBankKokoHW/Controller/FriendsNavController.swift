@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FriendsNavController: UINavigationController {
+final class FriendsNavController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,7 +15,8 @@ class FriendsNavController: UINavigationController {
     }
 }
 
-fileprivate extension FriendsNavController {
+private extension FriendsNavController {
+    
     func setupFriendsVC() {
         let FriendVC = FriendsVC()
         

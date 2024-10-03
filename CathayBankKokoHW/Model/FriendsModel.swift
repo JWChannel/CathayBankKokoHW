@@ -18,4 +18,3 @@ struct Friend: Codable, Equatable {
     let fid: String // friend id
     var updateDate: String // update date
 }
-

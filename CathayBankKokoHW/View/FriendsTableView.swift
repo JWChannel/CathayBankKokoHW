@@ -7,9 +7,7 @@
 
 import UIKit
 
-import UIKit
-
-class FriendsTableView: UIView {
+final class FriendsTableView: UIView {
 
     private let tableView = UITableView()
 
@@ -27,7 +25,10 @@ class FriendsTableView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
 
+private extension FriendsTableView {
+    
     private func setupTableView() {
         tableView.backgroundColor = .white
         tableView.separatorStyle = .none
@@ -75,4 +76,3 @@ extension FriendsTableView: UITableViewDelegate {
         return 60
     }
 }
-
