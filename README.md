@@ -10,6 +10,7 @@ It supports three different states of the user interface and handles asynchronou
 <p align="center">
     <img src="ReadMeImages/1-0-scenario.png" alt="Scenario" width="200">
 </p>
+
 - **1-(1) No Friends**: Displays when there are no friends in the list.
 
 - **1-(2) Friends Without Invitations**: Shows when there are friends, but no new invitations. (Note: The API still returns one invitation).
