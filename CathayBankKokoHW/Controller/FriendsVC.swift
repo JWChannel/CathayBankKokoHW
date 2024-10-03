@@ -127,9 +127,9 @@ private extension FriendsVC {
             friendsTableView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 friendsTableView.topAnchor.constraint(equalTo: userView.bottomAnchor),
-                friendsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                friendsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                friendsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                friendsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                friendsTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             ])
         }
     }

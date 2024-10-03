@@ -114,3 +114,7 @@ private extension InvitationCard {
         ])
     }
 }
+
+#Preview {
+  InvitationCard()
+}

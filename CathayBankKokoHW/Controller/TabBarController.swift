@@ -60,8 +60,6 @@ private extension UITabBarController {
     }
 }
 
-import SwiftUI
-
 #Preview {
     TabBarController()
 }

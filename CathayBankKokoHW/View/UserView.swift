@@ -297,3 +297,7 @@ extension UserView {
         isStacked.toggle()
     }
 }
+
+#Preview {
+    UserView()
+}

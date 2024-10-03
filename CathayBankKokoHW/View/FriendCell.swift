@@ -155,3 +155,7 @@ extension FriendCell {
         moreButton.configuration = config
     }
 }
+
+#Preview {
+    FriendCell()
+}

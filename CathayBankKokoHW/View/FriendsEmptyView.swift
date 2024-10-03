@@ -155,3 +155,7 @@ private extension FriendsEmptyView {
         ])
     }
 }
+
+#Preview {
+    FriendCell()
+}
