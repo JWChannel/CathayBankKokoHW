@@ -23,11 +23,22 @@
 		CB84FDE32CAC9D67005AD3ED /* InvitationCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB84FDE22CAC9D67005AD3ED /* InvitationCard.swift */; };
 		CB84FDE52CADBCDC005AD3ED /* FriendsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB84FDE42CADBCDC005AD3ED /* FriendsTableView.swift */; };
 		CB8DB5552CAE1C8A008A9D26 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8DB5542CAE1C8A008A9D26 /* SearchBar.swift */; };
+		CB8DB5602CAEE34A008A9D26 /* CathayBankKokoHWTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8DB55F2CAEE34A008A9D26 /* CathayBankKokoHWTests.swift */; };
 		CB9AD8972CA8B8FF00582634 /* FriendsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD8962CA8B8FF00582634 /* FriendsVM.swift */; };
 		CB9AD8992CA8B91200582634 /* UserVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD8982CA8B91200582634 /* UserVM.swift */; };
 		CB9AD89B2CA8B92800582634 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD89A2CA8B92800582634 /* UserModel.swift */; };
 		CB9AD89D2CA8B93500582634 /* FriendsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9AD89C2CA8B93500582634 /* FriendsModel.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CB8DB5612CAEE34A008A9D26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB69F5C72CA810C900F95219 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB69F5CE2CA810C900F95219;
+			remoteInfo = CathayBankKokoHW;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		CB6876882CAC5F7000AA01F6 /* FriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCell.swift; sourceTree = "<group>"; };
@@ -48,6 +59,8 @@
 		CB84FDE22CAC9D67005AD3ED /* InvitationCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvitationCard.swift; sourceTree = "<group>"; };
 		CB84FDE42CADBCDC005AD3ED /* FriendsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableView.swift; sourceTree = "<group>"; };
 		CB8DB5542CAE1C8A008A9D26 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		CB8DB55D2CAEE349008A9D26 /* CathayBankKokoHWTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CathayBankKokoHWTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB8DB55F2CAEE34A008A9D26 /* CathayBankKokoHWTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CathayBankKokoHWTests.swift; sourceTree = "<group>"; };
 		CB9AD8962CA8B8FF00582634 /* FriendsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsVM.swift; sourceTree = "<group>"; };
 		CB9AD8982CA8B91200582634 /* UserVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVM.swift; sourceTree = "<group>"; };
 		CB9AD89A2CA8B92800582634 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -56,6 +69,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		CB69F5CC2CA810C900F95219 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB8DB55A2CAEE349008A9D26 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -100,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				CB69F5D12CA810C900F95219 /* CathayBankKokoHW */,
+				CB8DB55E2CAEE34A008A9D26 /* CathayBankKokoHWTests */,
 				CB69F5D02CA810C900F95219 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				CB69F5CF2CA810C900F95219 /* CathayBankKokoHW.app */,
+				CB8DB55D2CAEE349008A9D26 /* CathayBankKokoHWTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -137,6 +159,14 @@
 				CB6876942CAC611E00AA01F6 /* Scenario.swift */,
 			);
 			path = Scenario;
+			sourceTree = "<group>";
+		};
+		CB8DB55E2CAEE34A008A9D26 /* CathayBankKokoHWTests */ = {
+			isa = PBXGroup;
+			children = (
+				CB8DB55F2CAEE34A008A9D26 /* CathayBankKokoHWTests.swift */,
+			);
+			path = CathayBankKokoHWTests;
 			sourceTree = "<group>";
 		};
 		CB9AD89E2CA8B93F00582634 /* ViewModel */ = {
@@ -177,6 +207,24 @@
 			productReference = CB69F5CF2CA810C900F95219 /* CathayBankKokoHW.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CB8DB55C2CAEE349008A9D26 /* CathayBankKokoHWTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CB8DB5632CAEE34A008A9D26 /* Build configuration list for PBXNativeTarget "CathayBankKokoHWTests" */;
+			buildPhases = (
+				CB8DB5592CAEE349008A9D26 /* Sources */,
+				CB8DB55A2CAEE349008A9D26 /* Frameworks */,
+				CB8DB55B2CAEE349008A9D26 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CB8DB5622CAEE34A008A9D26 /* PBXTargetDependency */,
+			);
+			name = CathayBankKokoHWTests;
+			productName = CathayBankKokoHWTests;
+			productReference = CB8DB55D2CAEE349008A9D26 /* CathayBankKokoHWTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -189,6 +237,10 @@
 				TargetAttributes = {
 					CB69F5CE2CA810C900F95219 = {
 						CreatedOnToolsVersion = 15.2;
+					};
+					CB8DB55C2CAEE349008A9D26 = {
+						CreatedOnToolsVersion = 15.2;
+						TestTargetID = CB69F5CE2CA810C900F95219;
 					};
 				};
 			};
@@ -206,6 +258,7 @@
 			projectRoot = "";
 			targets = (
 				CB69F5CE2CA810C900F95219 /* CathayBankKokoHW */,
+				CB8DB55C2CAEE349008A9D26 /* CathayBankKokoHWTests */,
 			);
 		};
 /* End PBXProject section */
@@ -218,6 +271,13 @@
 				CB69F5DF2CA810CA00F95219 /* LaunchScreen.storyboard in Resources */,
 				CB69F5DC2CA810CA00F95219 /* Assets.xcassets in Resources */,
 				CB69F5DA2CA810C900F95219 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB8DB55B2CAEE349008A9D26 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,7 +308,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CB8DB5592CAEE349008A9D26 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB8DB5602CAEE34A008A9D26 /* CathayBankKokoHWTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CB8DB5622CAEE34A008A9D26 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB69F5CE2CA810C900F95219 /* CathayBankKokoHW */;
+			targetProxy = CB8DB5612CAEE34A008A9D26 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CB69F5D82CA810C900F95219 /* Main.storyboard */ = {
@@ -445,6 +521,42 @@
 			};
 			name = Release;
 		};
+		CB8DB5642CAEE34A008A9D26 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5YS6T645W2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwch.CathayBankKokoHWTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CathayBankKokoHW.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CathayBankKokoHW";
+			};
+			name = Debug;
+		};
+		CB8DB5652CAEE34A008A9D26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5YS6T645W2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jwch.CathayBankKokoHWTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CathayBankKokoHW.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CathayBankKokoHW";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -462,6 +574,15 @@
 			buildConfigurations = (
 				CB69F5E42CA810CA00F95219 /* Debug */,
 				CB69F5E52CA810CA00F95219 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CB8DB5632CAEE34A008A9D26 /* Build configuration list for PBXNativeTarget "CathayBankKokoHWTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB8DB5642CAEE34A008A9D26 /* Debug */,
+				CB8DB5652CAEE34A008A9D26 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

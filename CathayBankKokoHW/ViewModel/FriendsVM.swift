@@ -7,29 +7,63 @@
 
 import Foundation
 
+protocol FriendsService {
+    func fetchFriends(from url: URL) async throws -> [Friend]
+}
+
+final class RealFriendsService: FriendsService {
+    func fetchFriends(from url: URL) async throws -> [Friend] {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoData = try JSONDecoder().decode(FriendsData.self, from: data)
+        return decoData.response
+    }
+}
+
+final class MockFriendsService: FriendsService { // For testing
+    func fetchFriends(from url: URL) async throws -> [Friend] {
+        if url.absoluteString == "https://dimanyen.github.io/friend1.json" {
+            return [
+                Friend(name: "John", status: 2, isTop: "1", fid: "1001", updateDate: "20240929"),
+                Friend(name: "Mary", status: 1, isTop: "0", fid: "1002", updateDate: "2024/09/28")
+            ]
+        } else if url.absoluteString == "https://dimanyen.github.io/friend2.json" {
+            return [
+                Friend(name: "Johnny", status: 2, isTop: "1", fid: "1001", updateDate: "2024/09/30"),
+                Friend(name: "David", status: 2, isTop: "0", fid: "1003", updateDate: "2024/09/27")
+            ]
+        } else {
+            return []
+        }
+    }
+}
+
 final class FriendsVM: ObservableObject {
 
+    var scenario: Scenario = .noFriends
     var rawFriends: [Friend] = []
     @Published var uniqueFriends: [Friend] = []
-    var scenario: Scenario = .noFriends
+    private let service: FriendsService
+ 
+    init(service: FriendsService) {
+        self.service = service
+    }
 
     func fetchFriendsTaskGroup() async throws {
-
-         try await withThrowingTaskGroup(of: [Friend].self) { group in
-             for urlString in scenario.scenarioURL {
-                 let url = URL(string: urlString)!
-          
-                 group.addTask {
-                     return try await self.fetchFriends(from: url)
-                 }
-             }
-
-             for try await friends in group {
-                 self.rawFriends.append(contentsOf: processUpdateDate(for: friends))
-             }
-             
-             uniqueFriends = filterUniqueFriends(rawFriends)
-         }
+        try await withThrowingTaskGroup(of: [Friend].self) { group in
+            for urlString in scenario.scenarioURL {
+                let url = URL(string: urlString)!
+                
+                group.addTask {
+                    return try await self.service.fetchFriends(from: url)
+                }
+            }
+            
+            for try await friends in group {
+                self.rawFriends.append(contentsOf: processUpdateDate(for: friends))
+            }
+            
+            uniqueFriends = filterUniqueFriends(rawFriends)
+        }
     }
     
     func filterUniqueFriends(_ friends: [Friend]) -> [Friend] {
@@ -64,25 +98,5 @@ final class FriendsVM: ObservableObject {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
         return dateFormatter.date(from: dateString)
-    }
-
-    func fetchFriends(from url: URL) async throws -> [Friend] {
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoData = try JSONDecoder().decode(FriendsData.self, from: data)
-        // mock data
-//        let response = [
-//            Friend(name: "Judy", status: 2, isTop: "0", fid: "1001", updateDate: "2024/09/29"),
-//            Friend(name: "Mary", status: 1, isTop: "0", fid: "1002", updateDate: "2024/09/28"),
-//            Friend(name: "Tomsdfasdfasdfasdfasdfasdfasdfasdf", status: 2, isTop: "0", fid: "1003", updateDate: "2024/09/27"),
-//            Friend(name: "John", status: 2, isTop: "1", fid: "1004", updateDate: "2024/09/26"),
-//            Friend(name: "Peter", status: 2, isTop: "0", fid: "1005", updateDate: "2024/09/25"),
-//            Friend(name: "David", status: 2, isTop: "0", fid: "1006", updateDate: "2024/09/24"),
-//            Friend(name: "Alice", status: 2, isTop: "0", fid: "1007", updateDate: "2024/09/23"),
-//            Friend(name: "Bob", status: 2, isTop: "0", fid: "1008", updateDate: "2024/09/22"),
-//            Friend(name: "Cathy", status: 2, isTop: "0", fid: "1009", updateDate: "2024/09/21"),
-//        
-//        ]
-//        return response
-        return decoData.response
     }
 }

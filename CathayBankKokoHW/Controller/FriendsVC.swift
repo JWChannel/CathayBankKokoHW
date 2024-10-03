@@ -8,9 +8,11 @@
 import UIKit
 import Combine
 
+fileprivate let realService = RealFriendsService() // For dependency injection
+
 final class FriendsVC: UIViewController {
 
-    private let friendsVM = FriendsVM()
+    private let friendsVM = FriendsVM(service: realService)
     private let userVM = UserVM()
     private let userView = UserView()
     private let friendsEmptyView = FriendsEmptyView()
