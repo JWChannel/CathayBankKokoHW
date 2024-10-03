@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		32929F80E207B5E40CBCCB59 /* Pods_CathayBankKokoHWTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7014E09B6DCFF795154D39EB /* Pods_CathayBankKokoHWTests.framework */; };
+		A8CEE58D0028A12933997326 /* Pods_CathayBankKokoHW.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B6806071C3BA400F0B9B9AC /* Pods_CathayBankKokoHW.framework */; };
 		CB6876892CAC5F7000AA01F6 /* FriendCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6876882CAC5F7000AA01F6 /* FriendCell.swift */; };
 		CB68768B2CAC5F9B00AA01F6 /* FriendsEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB68768A2CAC5F9B00AA01F6 /* FriendsEmptyView.swift */; };
 		CB68768E2CAC5FE100AA01F6 /* FriendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB68768D2CAC5FE100AA01F6 /* FriendsVC.swift */; };
@@ -41,6 +43,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B6806071C3BA400F0B9B9AC /* Pods_CathayBankKokoHW.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CathayBankKokoHW.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		45BDEF18235460D7CAB49595 /* Pods-CathayBankKokoHW.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CathayBankKokoHW.release.xcconfig"; path = "Target Support Files/Pods-CathayBankKokoHW/Pods-CathayBankKokoHW.release.xcconfig"; sourceTree = "<group>"; };
+		45CA71E582CAF302293F466C /* Pods-CathayBankKokoHWTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CathayBankKokoHWTests.debug.xcconfig"; path = "Target Support Files/Pods-CathayBankKokoHWTests/Pods-CathayBankKokoHWTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7014E09B6DCFF795154D39EB /* Pods_CathayBankKokoHWTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CathayBankKokoHWTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7FE794ED5B0E981DF2284FFE /* Pods-CathayBankKokoHWTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CathayBankKokoHWTests.release.xcconfig"; path = "Target Support Files/Pods-CathayBankKokoHWTests/Pods-CathayBankKokoHWTests.release.xcconfig"; sourceTree = "<group>"; };
+		BB6A857753BBAFFAF594F653 /* Pods-CathayBankKokoHW.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CathayBankKokoHW.debug.xcconfig"; path = "Target Support Files/Pods-CathayBankKokoHW/Pods-CathayBankKokoHW.debug.xcconfig"; sourceTree = "<group>"; };
 		CB6876882CAC5F7000AA01F6 /* FriendCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendCell.swift; sourceTree = "<group>"; };
 		CB68768A2CAC5F9B00AA01F6 /* FriendsEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsEmptyView.swift; sourceTree = "<group>"; };
 		CB68768D2CAC5FE100AA01F6 /* FriendsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsVC.swift; sourceTree = "<group>"; };
@@ -72,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8CEE58D0028A12933997326 /* Pods_CathayBankKokoHW.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32929F80E207B5E40CBCCB59 /* Pods_CathayBankKokoHWTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +132,8 @@
 				CB69F5D12CA810C900F95219 /* CathayBankKokoHW */,
 				CB8DB55E2CAEE34A008A9D26 /* CathayBankKokoHWTests */,
 				CB69F5D02CA810C900F95219 /* Products */,
+				EE1734FB90F381DA85600CCD /* Pods */,
+				E85A5C9FFA34A2FEC7B1D7FC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -187,6 +199,27 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		E85A5C9FFA34A2FEC7B1D7FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1B6806071C3BA400F0B9B9AC /* Pods_CathayBankKokoHW.framework */,
+				7014E09B6DCFF795154D39EB /* Pods_CathayBankKokoHWTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EE1734FB90F381DA85600CCD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BB6A857753BBAFFAF594F653 /* Pods-CathayBankKokoHW.debug.xcconfig */,
+				45BDEF18235460D7CAB49595 /* Pods-CathayBankKokoHW.release.xcconfig */,
+				45CA71E582CAF302293F466C /* Pods-CathayBankKokoHWTests.debug.xcconfig */,
+				7FE794ED5B0E981DF2284FFE /* Pods-CathayBankKokoHWTests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -194,9 +227,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CB69F5E32CA810CA00F95219 /* Build configuration list for PBXNativeTarget "CathayBankKokoHW" */;
 			buildPhases = (
+				1D9A25068A6703D3FA319E7A /* [CP] Check Pods Manifest.lock */,
 				CB69F5CB2CA810C900F95219 /* Sources */,
 				CB69F5CC2CA810C900F95219 /* Frameworks */,
 				CB69F5CD2CA810C900F95219 /* Resources */,
+				57F155E9DFAEC704DDD91C51 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -211,6 +246,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CB8DB5632CAEE34A008A9D26 /* Build configuration list for PBXNativeTarget "CathayBankKokoHWTests" */;
 			buildPhases = (
+				89ADD377D02CCBCCB667F4C0 /* [CP] Check Pods Manifest.lock */,
 				CB8DB5592CAEE349008A9D26 /* Sources */,
 				CB8DB55A2CAEE349008A9D26 /* Frameworks */,
 				CB8DB55B2CAEE349008A9D26 /* Resources */,
@@ -282,6 +318,70 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1D9A25068A6703D3FA319E7A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CathayBankKokoHW-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		57F155E9DFAEC704DDD91C51 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CathayBankKokoHW/Pods-CathayBankKokoHW-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CathayBankKokoHW/Pods-CathayBankKokoHW-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CathayBankKokoHW/Pods-CathayBankKokoHW-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		89ADD377D02CCBCCB667F4C0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CathayBankKokoHWTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CB69F5CB2CA810C900F95219 /* Sources */ = {
@@ -467,6 +567,7 @@
 		};
 		CB69F5E42CA810CA00F95219 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB6A857753BBAFFAF594F653 /* Pods-CathayBankKokoHW.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -495,6 +596,7 @@
 		};
 		CB69F5E52CA810CA00F95219 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45BDEF18235460D7CAB49595 /* Pods-CathayBankKokoHW.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -523,6 +625,7 @@
 		};
 		CB8DB5642CAEE34A008A9D26 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45CA71E582CAF302293F466C /* Pods-CathayBankKokoHWTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -541,6 +644,7 @@
 		};
 		CB8DB5652CAEE34A008A9D26 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7FE794ED5B0E981DF2284FFE /* Pods-CathayBankKokoHWTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
