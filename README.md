@@ -4,6 +4,10 @@
 This project implements a friend list management interface using **Swift**, **UIKit**, following the **MVVM** design pattern. 
 It supports three different states of the user interface and handles asynchronous API requests to simulate various friend list scenarios.
 
+<p align="center">
+    <img src="ReadMeImages/cathay-bank-koko-hw.gif" alt="cathay" width="540">
+</p>
+
 ## Features
 
 ### 1. Three UI States
@@ -13,7 +17,7 @@ It supports three different states of the user interface and handles asynchronou
 
 - **1-(1) No Friends**: Displays when there are no friends in the list.
 
-- **1-(2) Friends Without Invitations**: Shows when there are friends, but no new invitations. (Note: The API still returns one invitation).
+- **1-(2) Friend List**: Shows when there are friends. (**Note: The API still returns one invitation**).
 
 - **1-(3) Friends with Invitations**: Displays when there are friends and the API returns two invitations.
 
@@ -27,7 +31,7 @@ The app makes asynchronous API requests to simulate the following scenarios:
     <img src="ReadMeImages/1-1-no-friends.png" alt="No Friends Scenario" width="200">
 </p>
    
-2. **Friends Only**: Makes two API requests to:
+2. **Friend List**: Makes two API requests to:
     - `https://dimanyen.github.io/friend1.json`
     - `https://dimanyen.github.io/friend2.json`
    
