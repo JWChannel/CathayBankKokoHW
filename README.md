@@ -10,7 +10,6 @@ It supports three different states of the user interface and handles asynchronou
 
 ## Features
 
-### 1. Three UI States
 <p align="center">
     <img src="ReadMeImages/1-0-scenario.png" alt="Scenario" width="200">
 </p>
@@ -41,7 +40,7 @@ Makes two API requests to:
     <img src="ReadMeImages/1-3-2-stacked.png" alt="Friends with Invitations Scenario" width="200">
 </p>
 
-### 3. Search Bar Functionality
+### Search Bar Functionality
 
 - The search bar allows users to search through friends' names.
 
@@ -50,7 +49,7 @@ Makes two API requests to:
 
 The following additional functionalities are included to enhance the user experience:
 
-1. **MJRefresh - Pull-to-Refresh**:
+1. **Pull-to-Refresh**:
     - The friend list uses **MJRefresh** to support pull-to-refresh functionality. This allows users to refresh the list by pulling it down, which triggers the API to fetch updated data again.
    
 2. **Search Bar Push**: When the search bar is tapped, it is pushed to the top under the `UINavigationBar` for better accessibility.
