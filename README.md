@@ -90,6 +90,7 @@ Here are the data sources used in the app:
 
 - Xcode 15.2+
 - iOS 17.2+
+- Swift 5.9.2+
 - **MJRefresh** (Installed via CocoaPods)
 
 ### Additional Notes
