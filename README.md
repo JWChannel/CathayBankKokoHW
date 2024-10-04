@@ -5,7 +5,7 @@ This project implements a friend list management interface using **Swift**, **UI
 It supports three different states of the user interface and handles asynchronous API requests to simulate various friend list scenarios.
 
 <p align="center">
-    <img src="ReadMeImages/cathay-bank-koko-hw2.gif" alt="cathay" width="540">
+    <img src="ReadMeImages/cathay-bank-koko-hw3.gif" alt="cathay" width="540">
 </p>
 
 ## Features
