@@ -15,23 +15,18 @@ It supports three different states of the user interface and handles asynchronou
     <img src="ReadMeImages/1-0-scenario.png" alt="Scenario" width="200">
 </p>
 
-- **1-(1) No Friends**: Displays when there are no friends in the list.
-
-- **1-(2) Friend List**: Shows when there are friends. (**Note: The API still returns one invitation**).
-
-- **1-(3) Friends with Invitations**: Displays when there are friends and the API returns two invitations.
-
-
-### 2. API Integration and Simulation
+### Three UI States & API Integration and Simulation
 
 The app makes asynchronous API requests to simulate the following scenarios:
 
-1. **No Friends**: Requests data from the API at `https://dimanyen.github.io/friend4.json` (No data returned for friends or invitations).
+1. **No Friends**: Displays when there are no friends in the list. Requests data from the API at `https://dimanyen.github.io/friend4.json` (No data returned for friends or invitations).
 <p align="center">
     <img src="ReadMeImages/1-1-no-friends.png" alt="No Friends Scenario" width="200">
 </p>
    
-2. **Friend List**: Makes two API requests to:
+2. **Friend List**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**)
+
+Makes two API requests to:
     - `https://dimanyen.github.io/friend1.json`
     - `https://dimanyen.github.io/friend2.json`
    
@@ -40,7 +35,7 @@ The app makes asynchronous API requests to simulate the following scenarios:
     <img src="ReadMeImages/1-2-friend-list.png" alt="Friends List Scenario" width="200">
 </p>
 
-3. **Friends with Invitations**: Makes a request to `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
+3. **Friend List with Invitations**: Displays when there are friends and the API returns two invitations. Makes a request to `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
 <p align="center">
     <img src="ReadMeImages/1-3-1-expanded.png" alt="Friends with Invitations Scenario" width="200">
     <img src="ReadMeImages/1-3-2-stacked.png" alt="Friends with Invitations Scenario" width="200">
@@ -85,8 +80,6 @@ Here are the data sources used in the app:
 2. Build the project using a target device or simulator with iOS 17.2 or later.
 3. Test the various UI states by selecting the scenarios on the startup screen.
 4. Pull down the list and trigger a refresh of the data.
-
-### Requirements
 
 - Xcode 15.2+
 - iOS 17.2+
