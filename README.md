@@ -23,13 +23,13 @@ The app makes asynchronous API requests to simulate the following scenarios:
     <img src="ReadMeImages/1-1-no-friends.png" alt="No Friends Scenario" width="200">
 </p>
    
-2. **Friend List**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**)
-
-Makes two API requests to:
+2. **Friend List**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**) Makes two API requests to:
     - `https://dimanyen.github.io/friend1.json`
     - `https://dimanyen.github.io/friend2.json`
    
+
     The results are combined into a list, and if any `fid` data is duplicated between the two, the app uses the record with the most recent `updateDate`.
+    
 <p align="center">
     <img src="ReadMeImages/1-2-friend-list.png" alt="Friends List Scenario" width="200">
 </p>
