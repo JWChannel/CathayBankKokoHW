@@ -5,7 +5,7 @@ This project implements a friend list management interface using **Swift**, **UI
 It supports three different states of the user interface and handles asynchronous API requests to simulate various friend list scenarios.
 
 <p align="center">
-    <img src="ReadMeImages/cathay-bank-koko-hw3.gif" alt="cathay" width="540">
+    <img src="ReadMeImages/cathay-bank-koko-hw4.gif" alt="cathay" width="540">
 </p>
 
 ## Features
@@ -16,14 +16,23 @@ It supports three different states of the user interface and handles asynchronou
 
 ### API Integration and Simulation
 
+Here are the API data sources used in the app:
+
+- **2-(1) User Data**: `https://dimanyen.github.io/man.json`
+- **2-(2) Friend List 1**: `https://dimanyen.github.io/friend1.json`
+- **2-(3) Friend List 2**: `https://dimanyen.github.io/friend2.json`
+- **2-(4) Friend List with Invitations**: `https://dimanyen.github.io/friend3.json`
+- **2-(5) No Data (Friends/Invitations)**: `https://dimanyen.github.io/friend4.json`
+
+
 The app makes asynchronous API requests to simulate the following scenarios:
 
-1. **No Friends**: Displays when there are no friends in the list. Requests data from the API at `https://dimanyen.github.io/friend4.json` (No data returned for friends or invitations).
+1. **No Friends**: Displays when there are no friends in the list. Requests data from the API at 2-(5) `https://dimanyen.github.io/friend4.json` (No data returned for friends or invitations).
 <p align="center">
     <img src="ReadMeImages/1-1-no-friends.png" alt="No Friends Scenario" width="200">
 </p>
    
-2. **Friend List Merge**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**) Makes two API requests to:
+2. **Friend List Merge**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**) Makes two API requests to 2-(2) & 2-(3):
     - `https://dimanyen.github.io/friend1.json`
     - `https://dimanyen.github.io/friend2.json`
    
@@ -34,7 +43,7 @@ The app makes asynchronous API requests to simulate the following scenarios:
     <img src="ReadMeImages/1-2-1-friend-list-merge.png" alt="Friends List Scenario" width="200">
 </p>
 
-3. **Friend List Only**: Shows when there are friends, without invitations. Requests data from the API at:
+3. **Friend List Only**: Shows when there are friends, without invitations. Requests data from the API at 2-(3):
     - `https://dimanyen.github.io/friend2.json`
    
 <p align="center">
@@ -42,7 +51,7 @@ The app makes asynchronous API requests to simulate the following scenarios:
 </p>
 
 
-4. **Friend List with Invitations**: Displays when there are friends and the API returns two invitations. Makes a request to `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
+4. **Friend List with Invitations**: Displays when there are friends and the API returns two invitations. Makes a request to 2-(4) `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
 <p align="center">
     <img src="ReadMeImages/1-3-1-expanded.png" alt="Friends with Invitations Scenario" width="200">
     <img src="ReadMeImages/1-3-2-stacked.png" alt="Friends with Invitations Scenario" width="200">
@@ -69,15 +78,6 @@ The following additional functionalities are included to enhance the user experi
 
 4. **Unit Testing**: Unit tests are included to verify the behavior of API requests and ensure proper data handling.
 
-## API Data Sources
-
-Here are the data sources used in the app:
-
-- **User Data**: `https://dimanyen.github.io/man.json`
-- **Friend List 1**: `https://dimanyen.github.io/friend1.json`
-- **Friend List 2**: `https://dimanyen.github.io/friend2.json`
-- **Friend List with Invitations**: `https://dimanyen.github.io/friend3.json`
-- **No Data (Friends/Invitations)**: `https://dimanyen.github.io/friend4.json`
 
 ---
 
