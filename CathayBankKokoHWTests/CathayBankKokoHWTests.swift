@@ -13,7 +13,7 @@ final class CathayBankKokoHWTests: XCTestCase {
         let mockService = MockFriendsService()
         
         let viewModel = FriendsVM(service: mockService)
-        viewModel.scenario = .friendsMerge
+        viewModel.scenario = .friendListMerge
         
         try await viewModel.fetchFriendsTaskGroup()
         

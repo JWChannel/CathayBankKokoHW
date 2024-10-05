@@ -96,9 +96,9 @@ private extension FriendsVC {
             switch friendsVM.scenario {
             case .noFriends:
                 userView.inviteLimit = 0
-            case .friendsMerge:
+            case .friendListMerge:
                 userView.inviteLimit = 2
-            case .friendsOnly:
+            case .friendListOnly:
                 userView.inviteLimit = 0
             case .friendsWithInvitations:
                 userView.inviteLimit = 2

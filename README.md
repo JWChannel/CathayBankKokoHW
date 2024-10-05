@@ -14,7 +14,7 @@ It supports three different states of the user interface and handles asynchronou
     <img src="ReadMeImages/1-0-scenario.png" alt="Scenario" width="200">
 </p>
 
-### Three UI States & API Integration and Simulation
+### API Integration and Simulation
 
 The app makes asynchronous API requests to simulate the following scenarios:
 
@@ -23,7 +23,7 @@ The app makes asynchronous API requests to simulate the following scenarios:
     <img src="ReadMeImages/1-1-no-friends.png" alt="No Friends Scenario" width="200">
 </p>
    
-2. **Friend List**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**) Makes two API requests to:
+2. **Friend List Merge**: Shows when there are friends. (**Note: The API still returns one invitation. If you don't want to display the invitationCard, please set inviteLimit to 0 in FriendsVC.**) Makes two API requests to:
     - `https://dimanyen.github.io/friend1.json`
     - `https://dimanyen.github.io/friend2.json`
    
@@ -31,10 +31,18 @@ The app makes asynchronous API requests to simulate the following scenarios:
     The results are combined into a list, and if any `fid` data is duplicated between the two, the app uses the record with the most recent `updateDate`.
     
 <p align="center">
-    <img src="ReadMeImages/1-2-friend-list.png" alt="Friends List Scenario" width="200">
+    <img src="ReadMeImages/1-2-1-friend-list-merge.png" alt="Friends List Scenario" width="200">
 </p>
 
-3. **Friend List with Invitations**: Displays when there are friends and the API returns two invitations. Makes a request to `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
+3. **Friend List Only**: Shows when there are friends, without invitations. Requests data from the API at:
+    - `https://dimanyen.github.io/friend2.json`
+   
+<p align="center">
+    <img src="ReadMeImages/1-2-2-friend-list-only.png" alt="Friends List Scenario" width="200">
+</p>
+
+
+4. **Friend List with Invitations**: Displays when there are friends and the API returns two invitations. Makes a request to `https://dimanyen.github.io/friend3.json` to simulate a scenario where both friends and invitations are present.
 <p align="center">
     <img src="ReadMeImages/1-3-1-expanded.png" alt="Friends with Invitations Scenario" width="200">
     <img src="ReadMeImages/1-3-2-stacked.png" alt="Friends with Invitations Scenario" width="200">
