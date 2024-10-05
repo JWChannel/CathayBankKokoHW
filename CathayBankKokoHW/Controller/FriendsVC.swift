@@ -89,17 +89,19 @@ private extension FriendsVC {
         setupUserView()
         switch friendsVM.rawFriends.isEmpty {
         case true:
+            tableView.isHidden = true
             emptyView.isHidden = false
             setupFriendEmptyView()
-            tableView.isHidden = true
         case false:
             switch friendsVM.scenario {
             case .noFriends:
                 userView.inviteLimit = 0
+            case .friendsMerge:
+                userView.inviteLimit = 2
             case .friendsOnly:
-                userView.inviteLimit = 4
+                userView.inviteLimit = 0
             case .friendsWithInvitations:
-                userView.inviteLimit = 4
+                userView.inviteLimit = 2
             }
             emptyView.isHidden = true
             tableView.isHidden = false
