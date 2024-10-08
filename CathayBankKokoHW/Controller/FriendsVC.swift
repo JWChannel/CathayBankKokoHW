@@ -16,6 +16,7 @@ final class FriendsVC: UIViewController {
     private let userView = UserView()
     private let emptyView = FriendsEmptyView()
     private lazy var tableView = FriendsTableView(friendsVM: friendsVM)
+    private var isAlertShown = false
     private var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -25,9 +26,17 @@ final class FriendsVC: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        selectAScenario()
+        isAlertShown = false
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if !isAlertShown {
+            selectAScenario()
+            isAlertShown = true
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         emptyView.isHidden = false
