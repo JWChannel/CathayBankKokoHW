@@ -10,15 +10,27 @@ import Combine
 
 final class FriendsVC: UIViewController {
     
-    private let realService = RealFriendsService() // For dependency injection
-    private lazy var friendsVM = FriendsVM(service: realService)
+    private let realService: FriendsService // For dependency injection
+    private let friendsVM: FriendsVM
     private let userVM = UserVM()
     private let userView = UserView()
     private let emptyView = FriendsEmptyView()
-    private lazy var tableView = FriendsTableView(friendsVM: friendsVM)
+    private let tableView: FriendsTableView
     private var isAlertShown = false
     private var cancellables = Set<AnyCancellable>()
-
+    
+    // Custom initializer
+    init(service: FriendsService = RealFriendsService()) {
+        self.realService = service
+        self.friendsVM = FriendsVM(service: service)
+        self.tableView = FriendsTableView(friendsVM: self.friendsVM)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         observeViewModel()
@@ -51,10 +63,10 @@ private extension FriendsVC {
         friendsVM.$uniqueFriends
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] friends in
                 self?.setupUI()
-                self?.userView.setupInvitationView(with: self?.friendsVM.uniqueFriends.filter { $0.status == 2 } )
-                self?.tableView.friends = self?.friendsVM.uniqueFriends ?? []
+                self?.userView.setupInvitationView(with: friends.filter { $0.status == 2 } )
+                self?.tableView.friends = friends
             }
             .store(in: &cancellables)
     }
